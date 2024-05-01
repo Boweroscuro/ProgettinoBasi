@@ -22,7 +22,7 @@ def create_app():
 
     db.init_app(app)
 
-    from routes import register_routes
+    from .routes import register_routes
     register_routes(app, db)
     
     migrate = Migrate(app, db)
