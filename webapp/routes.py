@@ -1,5 +1,5 @@
 from flask import render_template, request
-from models import *
+from webapp.models import *
 
 def register_routes(app, db):
 
