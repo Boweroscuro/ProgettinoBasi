@@ -19,7 +19,6 @@ def create_app():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@{indirizzo}:{port}/{database}"
 
-
     db.init_app(app)
 
     from .routes import register_routes
