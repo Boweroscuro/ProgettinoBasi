@@ -1,15 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
 def create_app():
 
     app = Flask(__name__, template_folder = 'templates')
-
-    from .auth import auth
-    from .views import views
 
     username = 'fra'
     password = 'fra'
@@ -21,10 +17,12 @@ def create_app():
 
     db.init_app(app)
 
-    from .routes import register_routes
-    register_routes(app, db)
+    from .auth import auth
+    from .views import views
     
-    migrate = Migrate(app, db)
+    app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
+    
     return app
 
 
