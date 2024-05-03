@@ -1,7 +1,7 @@
 from webapp import db
+from flask_login import UserMixin
 
-
-class Utenti(db.Model):
+class Utenti(db.Model, UserMixin):
     __tablename__ = 'utenti'
 
     idutente = db.Column(db.Integer, primary_key = True)
@@ -11,9 +11,15 @@ class Utenti(db.Model):
     email = db.Column(db.Text, nullable = False)
     password_hash = db.Column(db.Text, nullable= False)
     privilegi = db.Column(db.Boolean)
+    #ind = db.relationship('UtentiIndirizzi')
+"""
+class UtentiIndirizzi(db.Model):
+    __tablename__ = 'utentiindirizzi'
 
-    def __repr__(self):
-        return f'Utente con id {self.idutente}, nome {self.nome}, cognome {self.cognome}'
+    idu = db.Column(db.Integer, db.ForeignKey('idutente'), primary_key = True)
+    idi = db.Column(db.Integer, db.ForeignKey('idindirizzo'), primary_key = True)
+    isdefault = db.Column(db.Boolean)
+""" 
 
 class Indirizzi(db.Model):
     __tablename__ = 'indirizzi'
@@ -23,9 +29,7 @@ class Indirizzi(db.Model):
     numero = db.Column(db.Integer, nullable= False)
     cap = db.Column(db.Integer, nullable= False)
     città = db.Column(db.Text, nullable = False)
-
-    def __repr__(self):
-        return f'Indirizzo con id {self.idindirizzo}, via {self.via}, numero {self.numero}'
+    #Ute = db.relationship('UtentiIndirizzi')
 
 class Categorie(db.Model):
     __tablename__ = 'categorie'

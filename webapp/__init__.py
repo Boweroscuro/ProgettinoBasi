@@ -13,6 +13,7 @@ def create_app():
     indirizzo = '100.96.1.2'
     port = '5432'
 
+    app.config['SECRET_KEY'] = 'charizardteracrystal'
     app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@{indirizzo}:{port}/{database}"
 
     db.init_app(app)
