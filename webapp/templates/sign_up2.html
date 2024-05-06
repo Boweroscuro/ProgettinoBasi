@@ -1,0 +1,26 @@
+{% extends "base.html" %} 
+{% block title %}Inserisci Indirizzo{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <br />
+    <h3 align="center">Inserisci Indirizzo</h3>
+    <div class="form-group">
+        <label for="via">Via</label>
+        <input type="text" class="form-control" id="via" name="via" placeholder="Via" required />
+    </div>
+    <div class="form-group">
+        <label for="numero">Numero Civico</label>
+        <input type="text" class="form-control" id="numero" name="numero" placeholder="Numero Civico" required />
+    </div>
+    <div class="form-group">
+        <label for="cap">CAP</label>
+        <input type="text" class="form-control" id="cap" name="cap" placeholder="CAP" required />
+    </div>
+    <div class="form-group">
+        <label for="citta">Città</label>
+        <input type="text" class="form-control" id="citta" name="citta" placeholder="Città" required />
+    </div>
+    <button type="submit" class="btn btn-success">Iscriviti</button>
+</form>
+{% endblock %}
