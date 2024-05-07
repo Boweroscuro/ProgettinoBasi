@@ -1,31 +1,33 @@
 {% extends "base.html" %}
 
 {% block title %}
-Venditori
+Prodotti in vendita
 {% endblock %}
 
 {% block content %}
-<form method="POST">
-    <div class="container">
-        <h2 align="center">Venditori e Prodotti</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <h3>Venditore 1</h3>
-                <ul>
-                    <li>Prodotto 1</li>
-                    <li>Prodotto 2</li>
-                    <li>Prodotto 3</li>
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <h3>Venditore 2</h3>
-                <ul>
-                    <li>Prodotto 1</li>
-                    <li>Prodotto 2</li>
-                    <li>Prodotto 3</li>
-                </ul>
+<div class="container">
+    <h2 align="center">Prodotti in vendita</h2>
+    <div class="row">
+        {% for prodotto in prodotti %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img class="card-img-top" src="{{ prodotto.immagine }}" alt="Immagine prodotto">
+                <div class="card-body">
+                    <h4>{{ prodotto.nome }}</h4>
+                    <p class="card-text">{{ prodotto.descrizione }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Visualizza</button>
+                            <!-- Aggiungi qui la logica per visualizzare dettagli del prodotto -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-</form>
+    <div align="center">
+        <a href="{{ url_for('auth.hvenditori') }}" class="btn btn-success">Aggiungi Prodotto</a>
+    </div>
+</div>
 {% endblock %}

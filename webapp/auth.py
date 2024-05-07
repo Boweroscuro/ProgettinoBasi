@@ -98,4 +98,4 @@ def sign_in():
 @login_required
 def hvenditori():
 
-    return render_template('hvenditori.hmtl', utente=current_user)
+    return render_template('hvenditori.html', utente=current_user)
