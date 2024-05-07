@@ -17,6 +17,9 @@ class Utenti(db.Model, UserMixin):
     email = db.Column(db.Text, nullable = False)
     password_hash = db.Column(db.Text, nullable= False)
     privilegi = db.Column(db.Boolean)
+
+    def get_id(self):
+        return self.idutente
     
     indirizzo_ass = db.relationship('Indirizzi', secondary = UtentiIndirizzi, backref=db.backref('utente_ass'))
 
