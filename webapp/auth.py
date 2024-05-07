@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 
@@ -15,6 +15,7 @@ def login():
         if utente:
             if check_password_hash(utente.password_hash, password):
                 flash('Utente autenticato!', category = 'success')
+                login_user(utente, remember = True)
                 return redirect(url_for('views.home'))
             else:
                 flash('Password errata. Riprova', category='error')
@@ -25,8 +26,10 @@ def login():
 
 
 @auth.route('/logout')
+@login_required
 def logout():
-    return "<p>Logout</p>"
+    logout_user()
+    return redirect(url_for('auth.login'))
 
 @auth.route('/sign-up', methods=['GET','POST'])
 def sign_up():
@@ -79,6 +82,7 @@ def sign_up2():
         db.session.add(n_utente)
         db.session.commit()
 
+        login_user(utente, remember = True)
         flash('Account created!', category='success')
         return redirect(url_for('views.home'))
 
@@ -91,6 +95,7 @@ def sign_in():
 
 
 @auth.route('/hvenditori', methods=['GET', 'POST'])
+@login_required
 def hvenditori():
    
     utente = Utenti.query.filter_by().first()
