@@ -48,6 +48,8 @@ class Prodotti(db.Model):
     descrizione = db.Column(db.Text, nullable = False)
     marca = db.Column(db.Text, nullable = False)
 
+    idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'))
+
 
 class Ordini(db.Model):
     __tablename__ = 'ordini'

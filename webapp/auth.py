@@ -57,7 +57,6 @@ def sign_up():
             db.session.commit()
             return redirect(url_for('auth.sign_up2' , user_id = utente.idutente))
 
-            
     return render_template("sign_up.html")
 
 @auth.route('/sign_up2', methods=['GET', 'POST'])
@@ -88,4 +87,13 @@ def sign_up2():
 @auth.route('/sign-in')
 def sign_in():
     return "<p>sign_in</p>"
-    
+
+
+@auth.route('/hvenditori', methods=['GET', 'POST'])
+def hvenditori():
+   
+    utente = Utenti.query.filter_by().first()
+
+
+
+    return render_template('hvenditori.hmtl')
