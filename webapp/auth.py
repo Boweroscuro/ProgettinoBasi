@@ -61,7 +61,7 @@ def sign_up():
             db.session.commit()
             return redirect(url_for('auth.sign_up2' , user_id = utente.idutente))
 
-    return render_template("sign_up.html")
+    return render_template("sign_up.html", utente=current_user)
 
 @auth.route('/sign_up2', methods=['GET', 'POST'])
 def sign_up2():
@@ -82,7 +82,7 @@ def sign_up2():
         db.session.add(n_utente)
         db.session.commit()
 
-        login_user(utente, remember = True)
+        login_user(n_utente, remember = True)
         flash('Account created!', category='success')
         return redirect(url_for('views.home'))
 
