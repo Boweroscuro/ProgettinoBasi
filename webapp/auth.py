@@ -97,9 +97,5 @@ def sign_in():
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
 def hvenditori():
-   
-    #utente = Utenti.query.filter_by().first()
 
-
-
-    return render_template('hvenditori.html', utente = current_user)
+    return render_template('hvenditori.hmtl', utente=current_user)
