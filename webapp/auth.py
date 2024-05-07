@@ -98,8 +98,8 @@ def sign_in():
 @login_required
 def hvenditori():
    
-    utente = Utenti.query.filter_by().first()
+    #utente = Utenti.query.filter_by().first()
 
 
 
-    return render_template('hvenditori.hmtl')
+    return render_template('hvenditori.hmtl', utente = current_user)
