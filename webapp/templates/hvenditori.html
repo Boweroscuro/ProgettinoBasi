@@ -7,7 +7,7 @@ Prodotti in vendita
 {% block content %}
 <div class="container">
     <h2 align="center">Prodotti in vendita</h2>
-    <div class="row">
+    <!--<div class="row">
         {% for prodotto in prodotti %}
         <div class="col-md-4">
             <div class="card mb-4 shadow-sm">
@@ -18,14 +18,14 @@ Prodotti in vendita
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-outline-secondary">Visualizza</button>
-                            <!-- Aggiungi qui la logica per visualizzare dettagli del prodotto -->
+                            Aggiungi qui la logica per visualizzare dettagli del prodotto 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         {% endfor %}
-    </div>
+    </div>-->
     <div align="center">
         <a href="{{ url_for('auth.hvenditori') }}" class="btn btn-success">Aggiungi Prodotto</a>
     </div>

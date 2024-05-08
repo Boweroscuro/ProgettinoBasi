@@ -91,7 +91,7 @@ def sign_up2():
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
 def hvenditori():
-
+    
     return render_template('hvenditori.html', utente=current_user)
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
@@ -105,12 +105,12 @@ def aggprodotto():
         immagine = request.args.get('immagine')
         marca = request.form.get('marca')
         
-        prodotto = Prodotti(nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = id)
+        prodotto = Prodotti(nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = current_user.idutente)
       
         db.session.add(prodotto)
         db.session.commit()
         
         flash('Prodotto aggiunto!', category='success')
-        return redirect(url_for('views.home'))
+        return redirect(url_for('auth.hvenditori' , utente=current_user))
 
     return render_template('aggprodotto.html', utente = current_user)
