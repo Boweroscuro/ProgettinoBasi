@@ -88,14 +88,29 @@ def sign_up2():
 
     return render_template('sign_up2.html', utente = current_user)
 
-
-@auth.route('/sign-in')
-def sign_in():
-    return "<p>sign_in</p>"
-
-
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
 def hvenditori():
 
     return render_template('hvenditori.html', utente=current_user)
+
+@auth.route('/aggprodotto', methods=['GET', 'POST'])
+@login_required
+def aggprodotto():
+    if request.method == 'POST':
+        nome = request.form.get('nome')
+        costo = request.form.get('costo')
+        descrizione = request.form.get('descrizione')
+        quantità = request.form.get('quantità')
+        immagine = request.args.get('immagine')
+        marca = request.form.get('marca')
+        
+        prodotto = Prodotti(nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = id)
+      
+        db.session.add(prodotto)
+        db.session.commit()
+        
+        flash('Prodotto aggiunto!', category='success')
+        return redirect(url_for('views.home'))
+
+    return render_template('aggprodotto.html', utente = current_user)
