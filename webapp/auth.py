@@ -75,13 +75,10 @@ def sign_up2():
         n_utente = Utenti.query.filter_by(idutente = user_id).first()
 
         indirizzo = Indirizzi(via=via, numero=numero, cap=cap, città = citta)
+        indirizzo.utente_ass.append(n_utente)
         db.session.add(indirizzo)
         db.session.commit()
-        #fare che si possono aggiungere piu indirizzi
-        n_utente.indirizzo_ass.append(indirizzo)
-        db.session.add(n_utente)
-        db.session.commit()
-
+        
         login_user(n_utente, remember = True)
         flash('Account created!', category='success')
         return redirect(url_for('views.home'))
