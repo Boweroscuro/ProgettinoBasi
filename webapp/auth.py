@@ -1,7 +1,9 @@
+import base64
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
+
 
 auth = Blueprint('auth', __name__)
 
@@ -100,8 +102,10 @@ def hvenditori():
 def prodotto(idprodotto):
 
     prodotto = Prodotti.query.get_or_404(idprodotto)
+
+    immagine = base64.b64encode(prodotto.immagine).decode('utf-8')
     
-    return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
+    return render_template('prodotto.html', utente = current_user, prodotto = prodotto, immagine = immagine)
 
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
@@ -112,10 +116,10 @@ def aggprodotto():
         costo = request.form.get('costo')
         descrizione = request.form.get('descrizione')
         quantità = request.form.get('quantità')
-        immagine = request.args.get('immagine')
+        immagine = request.files['immagine']
         marca = request.form.get('marca')
         
-        prodotto = Prodotti(nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = current_user.idutente)
+        prodotto = Prodotti(immagine = immagine.read(), nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = current_user.idutente)
       
         db.session.add(prodotto)
         db.session.commit()
