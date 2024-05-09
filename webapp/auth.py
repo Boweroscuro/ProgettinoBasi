@@ -48,11 +48,13 @@ def sign_up():
         if utente:
             flash('Questo username esiste già.', category='error')
         if len(email) < 4:
-            flash('Email must be greater than 4 characters.', category='error')
+            flash('Email deve essere più di 4 caratteri', category='error')
         elif len(nome) < 2:
-            flash('First Name must be greater than 1 characters.', category='error')
+            flash('Nome deve essere più di 1 carattere', category='error')
+        elif len(cognome) < 2:
+            flash('Cognome deve essere più di 1 carattere', category='error')
         elif password1 != password2:
-            flash('Passwords dont\'t match.', category='error')
+            flash('Passwords don\'t match.', category='error')
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
@@ -88,8 +90,21 @@ def sign_up2():
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
 def hvenditori():
+
+    prodotti = Prodotti.query.filter_by(idu=current_user.idutente).all()
     
     return render_template('hvenditori.html', utente=current_user)
+
+"""
+@auth.route('/prodotto/<int:prodotto_id>') 
+@login_required
+def dettaglio_prodotto(prodotto_id):
+    # Ottieni il prodotto dal database utilizzando l'ID fornito
+    prodotto = Prodotti.query.get_or_404(prodotto_id)
+    
+    # Passa il prodotto al template per la visualizzazione
+    return render_template('dettaglio_prodotto.html', prodotto=prodotto)
+""" #da implementare
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
 @login_required
