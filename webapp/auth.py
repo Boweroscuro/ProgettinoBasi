@@ -106,6 +106,13 @@ def dettaglio_prodotto(prodotto_id):
     return render_template('dettaglio_prodotto.html', prodotto=prodotto)
 """ #da implementare
 
+@auth.route('/prodotto')
+@login_required
+def prodotto():
+
+    return render_template('prodotto.html', utente = current_user)
+
+
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
 @login_required
 def aggprodotto():
