@@ -133,3 +133,13 @@ def aggprodotto():
         return redirect(url_for('auth.hvenditori' , utente=current_user))
 
     return render_template('aggprodotto.html', utente = current_user)
+
+"""
+@auth.route('/home', methods=['GET', 'POST'])
+@login_required
+def home():
+
+    prodotti = Prodotti.query.all()
+    
+    return render_template('home.html', utente=current_user, prodotti = prodotti)
+"""
