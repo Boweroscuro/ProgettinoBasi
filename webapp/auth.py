@@ -93,7 +93,7 @@ def hvenditori():
 
     prodotti = Prodotti.query.filter_by(idu=current_user.idutente).all()
     
-    return render_template('hvenditori.html', utente=current_user)
+    return render_template('hvenditori.html', utente=current_user, prodotti = prodotti)
 
 """
 @auth.route('/prodotto/<int:prodotto_id>') 
