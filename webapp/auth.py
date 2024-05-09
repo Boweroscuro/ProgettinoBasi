@@ -95,22 +95,13 @@ def hvenditori():
     
     return render_template('hvenditori.html', utente=current_user, prodotti = prodotti)
 
-"""
-@auth.route('/prodotto/<int:prodotto_id>') 
+@auth.route('/prodotto/<int:idprodotto>')
 @login_required
-def dettaglio_prodotto(prodotto_id):
-    # Ottieni il prodotto dal database utilizzando l'ID fornito
-    prodotto = Prodotti.query.get_or_404(prodotto_id)
-    
-    # Passa il prodotto al template per la visualizzazione
-    return render_template('dettaglio_prodotto.html', prodotto=prodotto)
-""" #da implementare
+def prodotto(idprodotto):
 
-@auth.route('/prodotto')
-@login_required
-def prodotto():
+    prodotto = Prodotti.query.get_or_404(idprodotto)
     
-    return render_template('prodotto.html', utente = current_user)
+    return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
 
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
@@ -133,13 +124,3 @@ def aggprodotto():
         return redirect(url_for('auth.hvenditori' , utente=current_user))
 
     return render_template('aggprodotto.html', utente = current_user)
-
-"""
-@auth.route('/home', methods=['GET', 'POST'])
-@login_required
-def home():
-
-    prodotti = Prodotti.query.all()
-    
-    return render_template('home.html', utente=current_user, prodotti = prodotti)
-"""

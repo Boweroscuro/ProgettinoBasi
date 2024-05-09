@@ -17,7 +17,7 @@ Prodotti in vendita
                     <p class="card-text">{{ prodotto.descrizione }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
-                            <a href="{{ url_for('auth.prodotto') }}" class="btn btn-secondary">Visualizza</a>
+                            <a href="{{ url_for('auth.prodotto' , idprodotto = prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>
                             
                         </div>
                     </div>
