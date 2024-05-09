@@ -109,7 +109,7 @@ def dettaglio_prodotto(prodotto_id):
 @auth.route('/prodotto')
 @login_required
 def prodotto():
-
+    
     return render_template('prodotto.html', utente = current_user)
 
 
