@@ -11,6 +11,7 @@ Prodotti in vendita
         {% for prodotto in prodotti %}
         <div class="row">    
             <div class="col-md-8">
+                <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" alt="Immagine prodotto" style="max-width: 200px; max-height: 200px;">
                 <h4>{{ prodotto.nome }}</h4>
                 <p>{{ prodotto.descrizione }}</p>
             </div>
