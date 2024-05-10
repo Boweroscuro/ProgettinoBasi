@@ -22,7 +22,11 @@ Prodotti in vendita
     </div>
     <div align="center">
         {% if utente.privilegi %}
-        <a href="{{ url_for('auth.hvenditori') }}" class="btn btn-success">Indietro</a>
+            {% if utente.idutente == prodotto.idu %}
+            <a href="{{ url_for('auth.hvenditori') }}" class="btn btn-success">Indietro</a>
+            {% else %}
+            <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+            {% endif %}
         {% else %}
         <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
         {% endif %}
