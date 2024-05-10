@@ -10,8 +10,8 @@ Homepage
     <div class="row">
         {% for prodotto in prodotti %}
         <div class="col-md-4" >
-            <div class="card mb-4 shadow-sm" style="cursor: pointer;" onclick="window.location.href='{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}';">
-                <img class="card-img-top" src="{{ prodotto.immagine }}" alt="Immagine prodotto">
+            <div class="card mb-4 shadow-sm" style="cursor: pointer;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
+                <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" alt="Immagine prodotto" style="max-width: 200px; max-height: 200px;">
                 <div class="card-body">
                     <h4>{{ prodotto.nome }}</h4>
                     <p class="card-text">{{ prodotto.descrizione }}</p>

@@ -1,5 +1,6 @@
 import base64
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from io import BytesIO
+from flask import Blueprint, render_template, request, flash, redirect, send_file, url_for
 from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -96,6 +97,11 @@ def hvenditori():
     prodotti = Prodotti.query.filter_by(idu=current_user.idutente).all()
     
     return render_template('hvenditori.html', utente=current_user, prodotti = prodotti)
+
+@auth.route('/immagine/<int:idprodotto>')
+def get_immagine(idprodotto):
+    prodotto = Prodotti.query.get_or_404(idprodotto)
+    return send_file(BytesIO(prodotto.immagine), mimetype='image/jpeg')
 
 @auth.route('/prodotto/<int:idprodotto>')
 @login_required
