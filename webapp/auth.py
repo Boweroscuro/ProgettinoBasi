@@ -108,10 +108,8 @@ def get_immagine(idprodotto):
 def prodotto(idprodotto):
 
     prodotto = Prodotti.query.get_or_404(idprodotto)
-
-    immagine = base64.b64encode(prodotto.immagine).decode('utf-8')
     
-    return render_template('prodotto.html', utente = current_user, prodotto = prodotto, immagine = immagine)
+    return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
 
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])

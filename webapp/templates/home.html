@@ -6,19 +6,26 @@ Homepage
 
 {% block content %}
 <div class="container">
-    <h2 align="center">Home</h2>
-    <div class="row">
-        {% for prodotto in prodotti %}
-        <div class="col-md-4" >
-            <div class="card mb-4 shadow-sm" style="cursor: pointer;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
-                <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" alt="Immagine prodotto" style="max-width: 200px; max-height: 200px;">
+    <h2 class="text-center mb-4">Home</h2>
+    {% for prodotto in prodotti %}
+        {% if loop.index0 % 3 == 0 %}
+            <div class="row">
+        {% endif %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="width: 100%;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
+                <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Immagine prodotto">
                 <div class="card-body">
-                    <h4>{{ prodotto.nome }}</h4>
-                    <p class="card-text">{{ prodotto.descrizione }}</p>
+                    <h5 class="card-title">{{ prodotto.nome }}</h5>
+                    <p class="card-text">Quantità: {{ prodotto.quantità }}</p>
+                    <p class="card-text">Costo: {{ prodotto.costo }}</p>
+                    <p class="card-text">Descrizione: {{ prodotto.descrizione }}</p>
+                    <p class="card-text">Brand: {{ prodotto.marca }}</p>
                 </div>
             </div>
         </div>
-        {% endfor %}
-    </div>
+        {% if loop.index % 3 == 0 or loop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}
