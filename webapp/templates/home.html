@@ -9,8 +9,8 @@ Homepage
     <h2 align="center">Home</h2>
     <div class="row">
         {% for prodotto in prodotti %}
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
+        <div class="col-md-4" >
+            <div class="card mb-4 shadow-sm" style="cursor: pointer;" onclick="window.location.href='{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}';">
                 <img class="card-img-top" src="{{ prodotto.immagine }}" alt="Immagine prodotto">
                 <div class="card-body">
                     <h4>{{ prodotto.nome }}</h4>
