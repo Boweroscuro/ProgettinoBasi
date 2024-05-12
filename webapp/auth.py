@@ -163,8 +163,6 @@ def aggprodotto():
         return redirect(url_for('auth.hvenditori' , utente=current_user))
     
     categorie = Categorie.query.filter(Categorie.idgenitore.isnot(None)).all()
-
-
     return render_template('aggprodotto.html', utente = current_user, categorie=categorie)
 
 

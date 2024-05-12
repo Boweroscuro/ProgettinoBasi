@@ -52,7 +52,7 @@ class Prodotti(db.Model):
 
     idprodotto = db.Column(db.Integer, primary_key = True)
     nome = db.Column(db.Text, nullable = False)
-    costo = db.Column(db.Float, nullable= False)
+    costo = db.Column(db.Numeric, nullable= False)
     quantità = db.Column(db.Integer, nullable= False)
     immagine = db.Column(db.LargeBinary)
     descrizione = db.Column(db.Text, nullable = False)
