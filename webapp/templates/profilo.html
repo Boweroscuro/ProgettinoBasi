@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profilo Utente
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 align="center">Profilo Utente</h2>
+    <div>
+        <p><strong>Nome:</strong> {{ utente.nome }}</p>
+        <p><strong>Cognome:</strong> {{ utente.cognome }}</p>
+        <p><strong>Username:</strong> {{ utente.username }}</p>
+        <p><strong>Email:</strong> {{ utente.email }}</p>
+        <div align="center">
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-success">Logout</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

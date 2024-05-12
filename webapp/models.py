@@ -39,6 +39,7 @@ class Categorie(db.Model):
 
     idcategoria = db.Column(db.Integer, primary_key = True)
     nome = db.Column(db.Text, nullable = False)
+    idgenitore = db.Column(db.Integer, db.ForeignKey('categorie.idcategoria'))
 
 class Prodotti(db.Model):
     __tablename__ = 'prodotti'
@@ -52,6 +53,7 @@ class Prodotti(db.Model):
     marca = db.Column(db.Text, nullable = False)
 
     idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'))
+    idc = db.Column(db.Integer, db.ForeignKey('categorie.idcategoria'))
 
 
 class Ordini(db.Model):

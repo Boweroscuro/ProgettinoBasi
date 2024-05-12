@@ -90,6 +90,11 @@ def sign_up2():
 
     return render_template('sign_up2.html', utente = current_user)
 
+@auth.route('/profilo')
+@login_required  
+def user_profile():
+    return render_template('profilo.html', utente = current_user)
+
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
 def hvenditori():
@@ -122,13 +127,21 @@ def aggprodotto():
         quantità = request.form.get('quantità')
         immagine = request.files['immagine']
         marca = request.form.get('marca')
+        categoria = request.form.get('categoria') 
+
+        categoria = Categorie.query.get(categoria)
         
-        prodotto = Prodotti(immagine = immagine.read(), nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = current_user.idutente)
+        prodotto = Prodotti(immagine = immagine.read(), nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = current_user.idutente, idc = categoria.idcategoria)
       
         db.session.add(prodotto)
         db.session.commit()
         
         flash('Prodotto aggiunto!', category='success')
         return redirect(url_for('auth.hvenditori' , utente=current_user))
+    
+    categorie = Categorie.query.filter(Categorie.idgenitore.isnot(None)).all()
 
-    return render_template('aggprodotto.html', utente = current_user)
+
+    return render_template('aggprodotto.html', utente = current_user, categorie=categorie)
+
+

@@ -91,15 +91,19 @@
             <div class="navbar-nav">
                 {% if utente.is_authenticated %}
                 <a class="nav-item nav-link" id="home" href="/">Home</a>
-                <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
                   {% if utente.privilegi %}
-                  <a class="nav-item nav-link" id="Prodottiv" href="/hvenditori">Venditore</a>
+                  <a class="nav-item nav-link" id="Prodottiv" href="/hvenditori">Oggetti in vendita</a>
                   {% endif %}
                 {% else %}
                 <a class="nav-item nav-link" id="login" href="/login">Login</a>
                 <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
                 {% endif %}
             </div>
+            <div class="navbar-nav ml-auto">
+              {% if utente.is_authenticated %}
+              <a class="nav-item nav-link" id="profilo" href="/profilo">Profilo</a>
+              {% endif %}
+          </div>
         </div>
     </nav>
 
