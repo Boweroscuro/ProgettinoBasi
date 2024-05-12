@@ -7,6 +7,11 @@ UtentiIndirizzi = db.Table('utentiindirizzi',
     db.Column('idi', db.Integer, db.ForeignKey('indirizzi.idindirizzo'))
 )
 
+UtentiProdotti = db.Table('utentiprodotti',
+    db.Column('idu', db.Integer, db.ForeignKey('utenti.idutente')),
+    db.Column('idp', db.Integer, db.ForeignKey('prodotti.idprodotto'))
+) 
+
 class Utenti(db.Model, UserMixin):
     __tablename__ = 'utenti'
 
@@ -22,6 +27,7 @@ class Utenti(db.Model, UserMixin):
         return self.idutente
     
     indirizzo_ass = db.relationship('Indirizzi', secondary = UtentiIndirizzi, backref=db.backref('utente_ass'))
+    prodotto_carrello = db.relationship('Prodotti', secondary = UtentiProdotti, backref=db.backref('utentecar'))
 
 
 class Indirizzi(db.Model):

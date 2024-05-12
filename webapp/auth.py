@@ -129,6 +129,16 @@ def prodotto(idprodotto):
     
     return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
 
+@auth.route('/aggcarrello/<int:idprodotto>', methods=['GET', 'POST'])
+@login_required
+def aggcarrello(idprodotto):
+    prodotto = Prodotti.query.get_or_404(idprodotto)
+
+    current_user.prodotto_carrello.append(prodotto)
+    db.session.commit()
+
+    return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
+
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
 @login_required
@@ -158,3 +168,8 @@ def aggprodotto():
     return render_template('aggprodotto.html', utente = current_user, categorie=categorie)
 
 
+@auth.route('/carrello', methods=['GET'])
+@login_required
+def carrello():
+    prodotti_carrello = current_user.prodotto_carrello
+    return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
