@@ -16,9 +16,23 @@ Prodotti in vendita
             </div>
             <div class="col-md-4 text-right" > 
                 <a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>
+            <p></p>
+            <form id="elimina-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.eliminaprodotto', idprodotto=prodotto.idprodotto) }}" method="post">
+                <button type="button" class="btn btn-danger elimina-btn" data-prodotto="{{ prodotto.idprodotto }}">Elimina</button>
+            </form>
             </div>
         </div>
         {% endfor %}
+        <script>
+            document.querySelectorAll('.elimina-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const prodottoId = this.getAttribute('data-prodotto');
+                    if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
+                        document.getElementById(`elimina-form-${prodottoId}`).submit();
+                    }
+                });
+            });
+        </script>
     </ul>
     <div align="center">
         <a href="{{ url_for('auth.aggprodotto') }}" class="btn btn-success">Aggiungi Prodotto</a>

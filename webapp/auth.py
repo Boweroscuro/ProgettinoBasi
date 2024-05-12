@@ -103,6 +103,19 @@ def hvenditori():
     
     return render_template('hvenditori.html', utente=current_user, prodotti = prodotti)
 
+@auth.route('/eliminaprodotto/<int:idprodotto>', methods=['POST'])
+@login_required
+def eliminaprodotto(idprodotto):
+    prodotto = Prodotti.query.get_or_404(idprodotto)
+    if prodotto.idu != current_user.idutente:
+        flash('Non sei autorizzato a eliminare questo prodotto.', category='error')
+        return redirect(url_for('auth.hvenditori'))
+    
+    db.session.delete(prodotto)
+    db.session.commit()
+    flash('Prodotto eliminato con successo.', category='success')
+    return redirect(url_for('auth.hvenditori'))
+
 @auth.route('/immagine/<int:idprodotto>')
 def get_immagine(idprodotto):
     prodotto = Prodotti.query.get_or_404(idprodotto)
