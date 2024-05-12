@@ -101,7 +101,10 @@
             </div>
             <div class="navbar-nav ml-auto">
               {% if utente.is_authenticated %}
-              <a class="nav-item nav-link" id="carrello" href="/carrello">Carrello</a>
+                {% if utente.privilegi %}
+                {% else %}
+                <a class="nav-item nav-link" id="carrello" href="/carrello">Carrello</a>
+                {% endif %}
               <a class="nav-item nav-link" id="profilo" href="/profilo">Profilo</a>
               {% endif %}
           </div>
