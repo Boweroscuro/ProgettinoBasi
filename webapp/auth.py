@@ -171,3 +171,29 @@ def aggprodotto():
 def carrello():
     prodotti_carrello = current_user.prodotto_carrello
     return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
+
+@auth.route('/homeprodot') 
+@login_required
+def homeprodot():
+
+    categorie = Categorie.query.filter_by(idgenitore=None).all()
+    
+    search = request.args.get('search')
+    categoria = request.args.get('categoria')
+
+    if search:
+        # Esegui una ricerca generica per i prodotti che corrispondono al termine di ricerca
+        prodotti = Prodotti.query.filter(Prodotti.nome.ilike(f'%{search}%')).all()
+    elif categoria:
+        categoria_selezionata = Categorie.query.filter_by(nome=categoria).first()
+        if categoria_selezionata:
+            # Esegui una ricerca per i prodotti che hanno l'idgenitore uguale all'id della categoria selezionata
+            prodotti = Prodotti.query.filter_by(idc=categoria_selezionata.idgenitore).all()
+        else:
+            prodotti = []  # Categoria non trovata, restituisci una lista vuota
+    else:
+        # Nessuna ricerca specificata, mostra tutti i prodotti
+        prodotti = Prodotti.query.all()
+
+    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti , categorie = categorie)
+

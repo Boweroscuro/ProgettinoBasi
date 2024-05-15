@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Homepage
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Benvenuto {{ utente.nome }}</h2>
+    <form action="{{ url_for('views.home') }}" method="GET" class="mb-4">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <label class="sr-only" for="search">Cerca per nome prodotto</label>
+                <input type="text" class="form-control mb-2" id="search" name="search" placeholder="Cerca per nome prodotto">
+            </div>
+            <div class="col-auto">
+                <label class="sr-only" for="categoria">Filtra per categoria</label>
+                <select class="form-control mb-2" id="categoria" name="categoria">
+                    <option value="">Tutte le categorie</option>
+                    {% for categoria in categorie %}
+                        <option value="{{ categoria.idcategoria }}">{{ categoria.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+            </div>
+        </div>
+    </form>
+    {% for prodotto in prodotti %}
+        {% if loop.index0 % 3 == 0 %}
+            <div class="row">
+        {% endif %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="width: 100%;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
+                <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Immagine prodotto">
+                <div class="card-body">
+                    <h5 class="card-title">{{ prodotto.nome }}</h5>
+                    <p class="card-text">Quantità: {{ prodotto.quantità }}</p>
+                    <p class="card-text">Costo: {{ prodotto.costo }}€</p>
+                    <p class="card-text">Descrizione: {{ prodotto.descrizione }}</p>
+                    <p class="card-text">Brand: {{ prodotto.marca }}</p>
+                </div>
+            </div>
+        </div>
+        {% if loop.index % 3 == 0 or loop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
