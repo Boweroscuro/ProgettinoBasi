@@ -27,7 +27,7 @@ def home():
         categoria_selezionata = Categorie.query.filter_by(nome=categoria).first()
         if categoria_selezionata:
             # Esegui una ricerca per i prodotti che hanno l'idgenitore uguale all'id della categoria selezionata
-            prodotti = Prodotti.query.filter_by(idc=categoria_selezionata.idgenitore).all()
+            prodotti = Prodotti.query.filter_by(idc=categoria_selezionata.idcategoria).all()
         else:
             prodotti = []  # Categoria non trovata, restituisci una lista vuota"""
 
