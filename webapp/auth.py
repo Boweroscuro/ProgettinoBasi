@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-from flask import Blueprint, render_template, request, flash, redirect, send_file, url_for
+from flask import Blueprint, jsonify, render_template, request, flash, redirect, send_file, url_for
 from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -121,6 +121,8 @@ def get_immagine(idprodotto):
     prodotto = Prodotti.query.get_or_404(idprodotto)
     return send_file(BytesIO(prodotto.immagine), mimetype='image/jpeg')
 
+
+
 @auth.route('/prodotto/<int:idprodotto>')
 @login_required
 def prodotto(idprodotto):
@@ -151,20 +153,61 @@ def aggprodotto():
         immagine = request.files['immagine']
         marca = request.form.get('marca')
         categoria = request.form.get('categoria') 
+        sottocategoria = request.form.get('sottocategoria')
+
+        error = False
+        if not nome or len(nome) <= 2 or len(nome) > 30:
+            flash('Il nome del prodotto deve essere compreso tra 2 e 30 caratteri', category='error')
+            error = True
+        if not descrizione or len(descrizione) > 100:
+            flash('La descrizione deve contenere massimo 100 caratteri', category='error')
+            error = True
+        try:
+            costo = float(costo)
+            if costo <= 0:
+                flash('Il costo deve essere un numero maggiore di zero', category='error')
+                error = True
+        except ValueError:
+            flash('Il costo deve essere un numero valido', category='error')
+            error = True
+        if not quantità.isdigit() or int(quantità) <= 0:
+            flash('La quantità deve essere un numero intero maggiore di zero', category='error')
+            error = True
+        else:
+            quantità = int(quantità)
 
         categoria = Categorie.query.get(categoria)
+        if not categoria:
+            flash('Categoria non valida', category='error')
+            error = True
+
+        if not error:
+            # Aggiungere il prodotto solo se non ci sono errori
+            prodotto = Prodotti(
+                immagine=immagine.read(), 
+                nome=nome, 
+                costo=costo, 
+                descrizione=descrizione, 
+                quantità=quantità, 
+                marca=marca, 
+                idu=current_user.idutente, 
+                idc=sottocategoria)
+            
+            db.session.add(prodotto)
+            db.session.commit()
+            flash('Prodotto aggiunto!', category='success')
+            return redirect(url_for('auth.hvenditori', utente=current_user))
         
-        prodotto = Prodotti(immagine = immagine.read(), nome=nome, costo=costo, descrizione=descrizione, quantità = quantità, marca=marca, idu = current_user.idutente, idc = categoria.idcategoria)
-      
-        db.session.add(prodotto)
-        db.session.commit()
-        
-        flash('Prodotto aggiunto!', category='success')
-        return redirect(url_for('auth.hvenditori' , utente=current_user))
-    
-    categorie = Categorie.query.filter(Categorie.idgenitore.isnot(None)).all()
+    categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
+
     return render_template('aggprodotto.html', utente = current_user, categorie=categorie)
 
+@auth.route('/get_sottocategorie')
+def get_sottocategorie():
+    categoria_id = request.args.get('categoria_id')
+    sottocategorie = Categorie.query.filter_by(idgenitore=categoria_id).all()
+    sottocategorie_list = [{'id': s.idcategoria, 'nome': s.nome} for s in sottocategorie]
+    return jsonify(sottocategorie=sottocategorie_list)
 
 @auth.route('/carrello', methods=['GET'])
 @login_required
