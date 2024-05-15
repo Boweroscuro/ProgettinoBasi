@@ -23,7 +23,7 @@ Homepage
             <div class="row">
         {% endif %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100 rounded-circle text-center" style="width: 100%; border-radius: 50%; overflow: hidden;">
+            <div class="card h-100 rounded-circle text-center" style="width: 100%; border-radius: 50%; overflow: hidden;" onclick=window.location.href="{{ url_for('auth.homeprodot', idcategoria=categoria.idcategoria) }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ categoria.nome }}</h5>
                 </div>

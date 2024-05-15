@@ -23,13 +23,5 @@ def home():
         categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
 
     return render_template("home.html", utente = current_user, categorie = categorie)
-"""elif categoria:
-        categoria_selezionata = Categorie.query.filter_by(nome=categoria).first()
-        if categoria_selezionata:
-            # Esegui una ricerca per i prodotti che hanno l'idgenitore uguale all'id della categoria selezionata
-            prodotti = Prodotti.query.filter_by(idc=categoria_selezionata.idcategoria).all()
-        else:
-            prodotti = []  # Categoria non trovata, restituisci una lista vuota"""
-
 
 

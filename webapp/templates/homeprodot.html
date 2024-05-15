@@ -7,7 +7,7 @@ Homepage
 {% block content %}
 <div class="container">
     <h2 class="text-center mb-4">Benvenuto {{ utente.nome }}</h2>
-    <form action="{{ url_for('views.home') }}" method="GET" class="mb-4">
+    <form action="{{ url_for('auth.homeprodot', idcategoria=idcategoria) }}" method="GET" class="mb-4">
         <div class="form-row align-items-center">
             <div class="col-auto">
                 <label class="sr-only" for="search">Cerca per nome prodotto</label>

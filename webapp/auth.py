@@ -215,28 +215,13 @@ def carrello():
     prodotti_carrello = current_user.prodotto_carrello
     return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
 
-@auth.route('/homeprodot') 
+@auth.route('/homeprodot/<int:idcategoria>') 
 @login_required
-def homeprodot():
+def homeprodot(idcategoria):
 
-    categorie = Categorie.query.filter_by(idgenitore=None).all()
-    
-    search = request.args.get('search')
-    categoria = request.args.get('categoria')
+    #fare casi speciali
+    categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
+    prodotti = Prodotti.query.filter(Prodotti.idc.in_([c.idcategoria for c in categorie_figlie])).all()
 
-    if search:
-        # Esegui una ricerca generica per i prodotti che corrispondono al termine di ricerca
-        prodotti = Prodotti.query.filter(Prodotti.nome.ilike(f'%{search}%')).all()
-    elif categoria:
-        categoria_selezionata = Categorie.query.filter_by(nome=categoria).first()
-        if categoria_selezionata:
-            # Esegui una ricerca per i prodotti che hanno l'idgenitore uguale all'id della categoria selezionata
-            prodotti = Prodotti.query.filter_by(idc=categoria_selezionata.idgenitore).all()
-        else:
-            prodotti = []  # Categoria non trovata, restituisci una lista vuota
-    else:
-        # Nessuna ricerca specificata, mostra tutti i prodotti
-        prodotti = Prodotti.query.all()
-
-    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti , categorie = categorie)
+    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, idcategoria = idcategoria)
 
