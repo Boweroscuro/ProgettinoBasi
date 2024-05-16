@@ -79,7 +79,7 @@ def sign_up2():
 
         n_utente = Utenti.query.filter_by(idutente = user_id).first()
 
-        indirizzo = Indirizzi(via=via, numero=numero, cap=cap, città = citta)
+        indirizzo = Indirizzi(via=via, numero=numero, cap=cap, città = citta, isdefault = True)
         indirizzo.utente_ass.append(n_utente)
         db.session.add(indirizzo)
         db.session.commit()
@@ -120,8 +120,6 @@ def eliminaprodotto(idprodotto):
 def get_immagine(idprodotto):
     prodotto = Prodotti.query.get_or_404(idprodotto)
     return send_file(BytesIO(prodotto.immagine), mimetype='image/jpeg')
-
-
 
 @auth.route('/prodotto/<int:idprodotto>')
 @login_required
@@ -225,3 +223,34 @@ def homeprodot(idcategoria):
 
     return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, idcategoria = idcategoria)
 
+@auth.route('/aggcategoria', methods=['GET', 'POST'])
+@login_required
+def aggcategoria():
+    if request.method == 'POST':
+        nome = request.form.get('nome')
+        immagine = request.files['immagine']
+        idgenitore = request.form.get('idgenitore')  # Aggiunto per ottenere l'id del genitore dalla form
+
+        # Se idgenitore non è specificato, lo impostiamo a NULL
+        if idgenitore == '':
+            idgenitore = None
+
+        # Creiamo una nuova istanza di Categorie
+        nuova_categoria = Categorie(nome=nome, immagine=immagine.read(), idgenitore=idgenitore)
+
+        # Aggiungiamo la nuova categoria al database
+        db.session.add(nuova_categoria)
+        db.session.commit()
+
+        flash('Categoria aggiunta!', category='success')
+        return redirect(url_for('auth.aggcategoria'))
+    
+    # Ottieni tutte le categorie principali per visualizzarle nella form
+    categorie_principali = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
+
+    return render_template('aggcategoria.html', utente=current_user, categorie_principali=categorie_principali)
+
+@auth.route('/immaginecat/<int:idcategoria>')
+def get_immagine_cat(idcategoria):
+    categoria = Categorie.query.get_or_404(idcategoria)
+    return send_file(BytesIO(categoria.immagine), mimetype='image/jpeg')

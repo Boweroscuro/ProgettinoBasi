@@ -38,6 +38,7 @@ class Indirizzi(db.Model):
     numero = db.Column(db.Integer, nullable= False)
     cap = db.Column(db.Integer, nullable= False)
     città = db.Column(db.Text, nullable = False)
+    isdefault = db.Column(db.Boolean, nullable = False)
 
 
 class Categorie(db.Model):
@@ -45,6 +46,7 @@ class Categorie(db.Model):
 
     idcategoria = db.Column(db.Integer, primary_key = True)
     nome = db.Column(db.Text, nullable = False)
+    immagine = db.Column(db.LargeBinary, nullable = False)
     idgenitore = db.Column(db.Integer, db.ForeignKey('categorie.idcategoria'))
 
 class Prodotti(db.Model):
