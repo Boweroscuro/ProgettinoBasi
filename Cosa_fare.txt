@@ -1,0 +1,8 @@
+- Parlare con Lore di creare una nuova tabella per le marche
+- Vedere se cambiare i prodotti
+- Rendere più carino il prodotto.html
+- Sistemare su base.html gli if 
+- Aggiungere più categorie 
+- Creare un profilo.html migliore
+- Sistemare views
+- Creare ECCO MI SONO DIMENTIVATO PER COLPA DELLA VECCHIA FANCULO

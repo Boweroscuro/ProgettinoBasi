@@ -5,27 +5,33 @@ Homepage
 {% endblock %}
 
 {% block content %}
-<style>
-    .card.hover-pointer {
-        cursor: pointer;
-    }
-</style>
+
 <div class="container">
-    <h2 class="text-center mb-4">Benvenuto {{ utente.nome }}</h2>
+    <h2 align="center">Prodotti in vendita</h2>
+    {% if categorie_figlie %}
+    <h3>Sottocategorie:</h3>
+    {% for sottocategoria in categorie_figlie %}
+        {% if loop.index0 % 3 == 0 %}
+            <div class="row">
+        {% endif %}
+        <div class="col-md-4 mb-4">
+            <div class="card card-border h-100 text-center hover-pointer" onclick=window.location.href="{{url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}"> 
+                <img src="{{ url_for('auth.get_immagine_cat', idcategoria=sottocategoria.idcategoria) }}" class="card-img-top" alt="{{ sottocategoria.nome }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ sottocategoria.nome }}</h5>
+                </div>
+            </div>
+        </div>
+        {% if loop.index % 3 == 0 or loop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% endif %}
     <form action="{{ url_for('auth.homeprodot', idcategoria=idcategoria) }}" method="GET" class="mb-4">
         <div class="form-row align-items-center">
             <div class="col-auto">
                 <label class="sr-only" for="search">Cerca per nome prodotto</label>
                 <input type="text" class="form-control mb-2" id="search" name="search" placeholder="Cerca per nome prodotto">
-            </div>
-            <div class="col-auto">
-                <label class="sr-only" for="categoria">Filtra per categoria</label>
-                <select class="form-control mb-2" id="categoria" name="categoria">
-                    <option value="">Tutte le categorie</option>
-                    {% for categoria in categorie %}
-                        <option value="{{ categoria.idcategoria }}">{{ categoria.nome }}</option>
-                    {% endfor %}
-                </select>
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-outline-primary mb-2">Cerca</button>

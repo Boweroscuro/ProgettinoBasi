@@ -6,9 +6,7 @@ Homepage
 
 {% block content %}
 <style>
-    .card.hover-pointer {
-        cursor: pointer;
-    }
+    
 </style>
 <div class="container">
     <h2 class="text-center mb-4">Benvenuto {{ utente.nome }}</h2>
@@ -27,13 +25,13 @@ Homepage
         </div>
     </form>
 
-
     {% for categoria in categorie %}
         {% if loop.index0 % 3 == 0 %}
             <div class="row">
         {% endif %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100 rounded-circle text-center hover-pointer" style="width: 100%; border-radius: 100%; overflow: hidden;" onclick=window.location.href="{{ url_for('auth.homeprodot', idcategoria=categoria.idcategoria) }}">
+            <div class="card card-border h-100 text-center hover-pointer" onclick=window.location.href="{{url_for('auth.homeprodot', idcategoria=categoria.idcategoria) }}"> 
+                <img src="{{ url_for('auth.get_immagine_cat', idcategoria=categoria.idcategoria) }}" class="card-img-top" alt="{{ categoria.nome }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ categoria.nome }}</h5>
                 </div>

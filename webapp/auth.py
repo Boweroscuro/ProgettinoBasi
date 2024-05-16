@@ -217,11 +217,17 @@ def carrello():
 @login_required
 def homeprodot(idcategoria):
 
-    #fare casi speciali
-    categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
-    prodotti = Prodotti.query.filter(Prodotti.idc.in_([c.idcategoria for c in categorie_figlie])).all()
+    categoria_padre = Categorie.query.filter_by(idcategoria=idcategoria).first()  # Ottieni la categoria corrente
 
-    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, idcategoria = idcategoria)
+    if categoria_padre.idgenitore is None:  # Se la categoria non ha un genitore, è una categoria principale
+        categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
+        prodotti = Prodotti.query.filter(Prodotti.idc.in_([c.idcategoria for c in categorie_figlie])).all()
+        
+    else:  # Se la categoria ha un genitore, è una sottocategoria
+        prodotti = Prodotti.query.filter(Prodotti.idc == idcategoria).all()  # Mostra solo i prodotti della sottocategoria
+        categorie_figlie = None  # Non ci sono sottocategorie per le sottocategorie
+
+    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, idcategoria = idcategoria, categorie_figlie=categorie_figlie)
 
 @auth.route('/aggcategoria', methods=['GET', 'POST'])
 @login_required
@@ -231,7 +237,8 @@ def aggcategoria():
         immagine = request.files['immagine']
         idgenitore = request.form.get('idgenitore')  # Aggiunto per ottenere l'id del genitore dalla form
 
-        # Se idgenitore non è specificato, lo impostiamo a NULL
+        print(f"Nome: {nome}, IdGenitore: {idgenitore}")
+
         if idgenitore == '':
             idgenitore = None
 
