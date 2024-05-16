@@ -16,10 +16,11 @@ Carrello
             </div>
             <div class="col-md-4 text-right" > 
                 <a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>
-            <p></p>
+                <p></p>
             </div>
         </div>
         {% endfor %}
     </ul>
+    <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
 </div>
 {% endblock %}

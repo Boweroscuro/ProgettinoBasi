@@ -5,6 +5,11 @@ Homepage
 {% endblock %}
 
 {% block content %}
+<style>
+    .card.hover-pointer {
+        cursor: pointer;
+    }
+</style>
 <div class="container">
     <h2 class="text-center mb-4">Benvenuto {{ utente.nome }}</h2>
     <form action="{{ url_for('auth.homeprodot', idcategoria=idcategoria) }}" method="GET" class="mb-4">
@@ -23,7 +28,10 @@ Homepage
                 </select>
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+                <button type="submit" class="btn btn-outline-primary mb-2">Cerca</button>
+            </div>
+            <div class="col-auto">
+                <button type="reset" class="btn btn-outline-danger mb-2" onclick="this.form.reset();this.form.submit();">X</button>
             </div>
         </div>
     </form>
@@ -32,7 +40,7 @@ Homepage
             <div class="row">
         {% endif %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100" style="width: 100%;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
+            <div class="card h-100 hover-pointer" style="width: 100%;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
                 <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Immagine prodotto">
                 <div class="card-body">
                     <h5 class="card-title">{{ prodotto.nome }}</h5>

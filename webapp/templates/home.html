@@ -5,6 +5,11 @@ Homepage
 {% endblock %}
 
 {% block content %}
+<style>
+    .card.hover-pointer {
+        cursor: pointer;
+    }
+</style>
 <div class="container">
     <h2 class="text-center mb-4">Benvenuto {{ utente.nome }}</h2>
     <form action="{{ url_for('views.home') }}" method="GET" class="mb-4">
@@ -14,16 +19,21 @@ Homepage
                 <input type="text" class="form-control mb-2" id="search" name="search" placeholder="Cerca Categoria">
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+                <button type="submit" class="btn btn-outline-primary mb-2">Cerca</button>
+            </div>
+            <div class="col-auto">
+                <button type="reset" class="btn btn-outline-danger mb-2" onclick="this.form.reset();this.form.submit();">X</button>
             </div>
         </div>
     </form>
+
+
     {% for categoria in categorie %}
         {% if loop.index0 % 3 == 0 %}
             <div class="row">
         {% endif %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100 rounded-circle text-center" style="width: 100%; border-radius: 50%; overflow: hidden;" onclick=window.location.href="{{ url_for('auth.homeprodot', idcategoria=categoria.idcategoria) }}">
+            <div class="card h-100 rounded-circle text-center hover-pointer" style="width: 100%; border-radius: 50%; overflow: hidden;" onclick=window.location.href="{{ url_for('auth.homeprodot', idcategoria=categoria.idcategoria) }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ categoria.nome }}</h5>
                 </div>
