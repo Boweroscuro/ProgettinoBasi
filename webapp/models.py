@@ -78,3 +78,14 @@ class Recensioni(db.Model):
     idrecensione = db.Column(db.Integer, primary_key = True)
     voto = db.Column(db.Integer, nullable = False)
     commento = db.Column(db.Text, nullable = False)
+
+class CarrelloProdotto(db.Model):
+    __tablename__ = 'carrello_prodotto'
+
+    idcp = db.Column(db.Integer, primary_key=True)
+    idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'), nullable=False)
+    idp = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), nullable=False)
+    quantità = db.Column(db.Integer, nullable=False, default=1)
+
+    def __repr__(self):
+        return f'CarrelloProdotto(User ID: {self.idu}, Prodotto ID: {self.idp}, Quantità: {self.quantità})'

@@ -11,11 +11,11 @@ Carrello
         {% for prodotto in prodotti %}
         <div class="row" style="border: 1px solid #e0e0e0;background-color:white ;border-radius: 5px; margin-bottom: 10px; padding: 10px;">    
             <div class="col-md-8">
-                <h4>{{ prodotto.nome }}</h4>
-                <p>{{ prodotto.descrizione }}</p>
+                <h4>Prodotti che stai per acquistare</h4>
+                <p>Quantità:{{ prodotto.quantità }}</p>
             </div>
             <div class="col-md-4 text-right" > 
-                <a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>
+                <a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idp) }}" class="btn btn-secondary">Visualizza</a>
                 <a href="{{ url_for('views.home') }}" class="btn btn-danger">X</a> <!--ancora non fa nulla-->
                 <p></p>
             </div>

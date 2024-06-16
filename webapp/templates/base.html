@@ -116,7 +116,7 @@
                 {% if utente.is_authenticated %}
                 <a class="nav-item nav-link" id="home" href="/">Home</a>
                 <a class="nav-item nav-link" id="aggcategoria" href="/aggcategoria">Categorie</a>
-                  {% if utente.privilegi %}
+                  {% if (utente.privilegi or utente.privilegi == null) %}
                   <a class="nav-item nav-link" id="Prodottiv" href="/hvenditori">Oggetti in vendita</a>
                   {% endif %}
                 {% else %}
@@ -126,8 +126,7 @@
             </div>
             <div class="navbar-nav ml-auto">
               {% if utente.is_authenticated %}
-                {% if utente.privilegi %}
-                {% else %}
+                {% if utente.privilegi==false %}
                 <a class="nav-item nav-link" id="carrello" href="/carrello">Carrello</a>
                 {% endif %}
               <a class="nav-item nav-link" id="profilo" href="/profilo">Profilo</a>

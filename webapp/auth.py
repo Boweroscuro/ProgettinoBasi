@@ -134,10 +134,22 @@ def prodotto(idprodotto):
 def aggcarrello(idprodotto):
     prodotto = Prodotti.query.get_or_404(idprodotto)
 
-    current_user.prodotto_carrello.append(prodotto)
-    db.session.commit()
+    # Controlla se il prodotto è già nel carrello dell'utente
+    carrello_prodotto = CarrelloProdotto.query.filter_by(idu=current_user.idutente, idp=idprodotto).first()
 
-    return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
+    if carrello_prodotto:
+        # Se il prodotto è già nel carrello, incrementa la quantità
+        carrello_prodotto.quantità += 1
+        flash(f'Quantità di "{prodotto.nome}" nel carrello: {carrello_prodotto.quantità}', 'success')
+    else:
+        # Se il prodotto non è nel carrello, aggiungilo con quantità 1
+        carrello_prodotto = CarrelloProdotto(idu=current_user.idutente, idp=idprodotto, quantità=1)
+        db.session.add(carrello_prodotto)
+        flash(f'Prodotto "{prodotto.nome}" aggiunto al carrello!', 'success')
+
+    db.session.commit()
+    return redirect(url_for('auth.prodotto', idprodotto=idprodotto))
+    #return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
 
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
@@ -210,7 +222,8 @@ def get_sottocategorie():
 @auth.route('/carrello', methods=['GET'])
 @login_required
 def carrello():
-    prodotti_carrello = current_user.prodotto_carrello
+    prodotti_carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+    
     return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
 
 @auth.route('/homeprodot/<int:idcategoria>') 
