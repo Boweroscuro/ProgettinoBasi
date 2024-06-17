@@ -115,8 +115,8 @@
             <div class="navbar-nav">
                 {% if utente.is_authenticated %}
                 <a class="nav-item nav-link" id="home" href="/">Home</a>
-                <a class="nav-item nav-link" id="aggcategoria" href="/aggcategoria">Categorie</a>
-                  {% if (utente.privilegi or utente.privilegi == null) %}
+                  {% if (utente.privilegi) %}
+                  <a class="nav-item nav-link" id="aggcategoria" href="/aggcategoria">Categorie</a>
                   <a class="nav-item nav-link" id="Prodottiv" href="/hvenditori">Oggetti in vendita</a>
                   {% endif %}
                 {% else %}

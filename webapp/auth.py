@@ -240,7 +240,26 @@ def homeprodot(idcategoria):
         prodotti = Prodotti.query.filter(Prodotti.idc == idcategoria).all()  # Mostra solo i prodotti della sottocategoria
         categorie_figlie = None  # Non ci sono sottocategorie per le sottocategorie
 
-    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, idcategoria = idcategoria, categorie_figlie=categorie_figlie)
+
+    #da qui
+    search = request.args.get('search')
+    selected_categoria = request.args.get('categoria')
+
+    if search:
+        # Esegui una ricerca generica per i prodotti che corrispondono al termine di ricerca
+        #prodotti = Prodotti.query.filter(Prodotti.nome.ilike(f'%{search}%')).all()
+        prodotti = Prodotti.query.filter(Prodotti.nome.ilike(f'%{search}%')).all()
+    
+    if selected_categoria:
+        # Filtra i prodotti per la categoria selezionata
+        prodotti = Prodotti.query.filter(Prodotti.idc == selected_categoria).all()
+    
+   
+    # Nessuna ricerca specificata, mostra tutti i prodotti
+    categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
+    
+    
+    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, categorie = categorie, idcategoria = idcategoria, categorie_figlie=categorie_figlie)
 
 @auth.route('/aggcategoria', methods=['GET', 'POST'])
 @login_required

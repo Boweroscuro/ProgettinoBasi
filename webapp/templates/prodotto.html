@@ -39,10 +39,10 @@ Prodotti in vendita
             {% if utente.idutente == prodotto.idu %}
             <a href="{{ url_for('auth.hvenditori') }}" class="btn btn-success">Indietro</a>
             {% else %}
-            <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+            <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a> 
             {% endif %}
         {% else %}
-        <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+        <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a> 
         {% endif %}
     </div>
 {% endblock %}
