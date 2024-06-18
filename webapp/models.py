@@ -6,11 +6,12 @@ UtentiIndirizzi = db.Table('utentiindirizzi',
     db.Column('idu', db.Integer, db.ForeignKey('utenti.idutente')),
     db.Column('idi', db.Integer, db.ForeignKey('indirizzi.idindirizzo'))
 )
-
+"""
 UtentiProdotti = db.Table('utentiprodotti',
     db.Column('idu', db.Integer, db.ForeignKey('utenti.idutente')),
     db.Column('idp', db.Integer, db.ForeignKey('prodotti.idprodotto'))
 ) 
+"""
 
 class Utenti(db.Model, UserMixin):
     __tablename__ = 'utenti'
@@ -27,7 +28,7 @@ class Utenti(db.Model, UserMixin):
         return self.idutente
     
     indirizzo_ass = db.relationship('Indirizzi', secondary = UtentiIndirizzi, backref=db.backref('utente_ass'))
-    prodotto_carrello = db.relationship('Prodotti', secondary = UtentiProdotti, backref=db.backref('utentecar'))
+    prodotto_carrello = db.relationship('CarrelloProdotto', backref='utente')#
 
 
 class Indirizzi(db.Model):
@@ -86,6 +87,8 @@ class CarrelloProdotto(db.Model):
     idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'), nullable=False)
     idp = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), nullable=False)
     quantità = db.Column(db.Integer, nullable=False, default=1)
+
+    prodotto = db.relationship('Prodotti', backref='carrello_prodotti')#
 
     def __repr__(self):
         return f'CarrelloProdotto(User ID: {self.idu}, Prodotto ID: {self.idp}, Quantità: {self.quantità})'

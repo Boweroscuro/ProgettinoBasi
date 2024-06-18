@@ -17,19 +17,10 @@ Prodotti in vendita
                 <p>Descrizione dettagliata del prodotto</p>
                 <p> {{ prodotto.descrizione }} </p>
                 <!-- Altri dettagli del prodotto come prezzo, disponibilità, etc. -->
-                {% if utente.privilegi %}
-                            {% set is_in_carrello = false %}
-                {% for carrello_prodotto in utente.carrello_prodotto %}
-                    {% if carrello_prodotto.idp == prodotto.idprodotto %}
-                        {% set is_in_carrello = true %}
-                    {% endif %}
-                {% endfor %}
-                
-                {% if not is_in_carrello %}
+                {% if not utente.privilegi %}   
                     <form id="aggiungi-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.aggcarrello', idprodotto=prodotto.idprodotto) }}" method="post">
                         <button type="submit" class="btn btn-primary">Aggiungi al carrello</button>
                     </form>
-                {% endif %}
                 {% endif %}
             </div>
         </div>

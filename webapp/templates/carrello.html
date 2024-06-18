@@ -1,27 +1,52 @@
+
 {% extends "base.html" %}
 
 {% block title %}
-Carrello
+CarrelloProva
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 align="center">Carrello</h2>
-    <ul class="list-group">
-        {% for prodotto in prodotti %}
-        <div class="row" style="border: 1px solid #e0e0e0;background-color:white ;border-radius: 5px; margin-bottom: 10px; padding: 10px;">    
-            <div class="col-md-8">
-                <h4>Prodotti che stai per acquistare</h4>
-                <p>Quantità:{{ prodotto.quantità }}</p>
-            </div>
-            <div class="col-md-4 text-right" > 
-                <a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idp) }}" class="btn btn-secondary">Visualizza</a>
-                <a href="{{ url_for('views.home') }}" class="btn btn-danger">X</a> <!--ancora non fa nulla-->
-                <p></p>
-            </div>
-        </div>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Sr</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead> 
+            <tbody>
+                {% for item in carrello_prodotti %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.prodotto.nome }}</td>
+                    <form action="{{ url_for('auth.updatecart', idprodotto=item.idp) }}" method="post">
+                    <td>${{ "%.2f"|format(item.prodotto.costo) }}</td>
+                    <td><input type="number" name="quantità" min="1" max="10" value="{{ item.quantità }}"></td>
+                    <td>${{ "%.2f"|format(item.quantità * item.prodotto.costo) }}</td>
+                    <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
+                    </form>
+                    <td><a href="{{ url_for('auth.deleteitem', id=item.idcp) }}" class="btn btn-sm btn-danger">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-sm">
+           <tr>
+               <td><a href="{{ url_for('views.home') }}" class="btn btn-success">Order now</a></td>
+               <td width="35%"></td>
+               <td><h5>Tassa: ${{ "%.2f"|format(tax) }}</h5></td>
+               <td><h5>Gran Totale: ${{ "%.2f"|format(grand_total) }}</h5></td>
+               <td><a href="{{ url_for('auth.clearcart') }}" class="btn btn-danger btn-sm float-right mr-4">Clear cart</a></td>
+           </tr>
+        </table>
+    </div>
+  </div>
 </div>
-{% endblock %}
+{% endblock content %}

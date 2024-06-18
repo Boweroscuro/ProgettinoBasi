@@ -219,12 +219,7 @@ def get_sottocategorie():
     sottocategorie_list = [{'id': s.idcategoria, 'nome': s.nome} for s in sottocategorie]
     return jsonify(sottocategorie=sottocategorie_list)
 
-@auth.route('/carrello', methods=['GET'])
-@login_required
-def carrello():
-    prodotti_carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
-    
-    return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
+
 
 @auth.route('/homeprodot/<int:idcategoria>') 
 @login_required
@@ -293,3 +288,49 @@ def aggcategoria():
 def get_immagine_cat(idcategoria):
     categoria = Categorie.query.get_or_404(idcategoria)
     return send_file(BytesIO(categoria.immagine), mimetype='image/jpeg')
+
+    """
+    @auth.route('/carrello', methods=['GET'])
+    @login_required
+    def carrello():
+        prodotti_carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+    
+        return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
+    """
+@auth.route('/carrello', methods=['GET', 'POST'])
+def carrello():
+    carrello_prodotti = db.session.query(CarrelloProdotto).filter_by(idu=current_user.idutente).all()
+    subtotal = sum(item.prodotto.costo * item.quantità for item in carrello_prodotti)
+    tax = subtotal /10  # Supponiamo una tassa del 10%
+    grand_total = subtotal + tax
+    return render_template('carrello.html',  utente=current_user, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total)
+
+@auth.route('/updatecart/<int:idprodotto>', methods=['POST'])
+@login_required   
+def updatecart(idprodotto):
+    carrello_prodotto = CarrelloProdotto.query.filter_by(idu=current_user.idutente, idp=idprodotto).first()
+    if carrello_prodotto:
+        nuova_quantita = int(request.form['quantità'])
+        carrello_prodotto.quantità = nuova_quantita
+        db.session.commit()
+        flash(f'Quantità di "{carrello_prodotto.prodotto.nome}" aggiornata a {nuova_quantita}', 'success')
+    return redirect(url_for('auth.carrello'))
+
+@auth.route('/deleteitem/<int:id>', methods=['GET'])
+@login_required
+def deleteitem(id):
+    carrello_prodotto = CarrelloProdotto.query.get_or_404(id)
+    nome_prodotto = carrello_prodotto.prodotto.nome
+    db.session.delete(carrello_prodotto)
+    db.session.commit()
+    flash(f'Prodotto "{nome_prodotto}" rimosso dal carrello', 'success')
+    return redirect(url_for('auth.carrello'))
+
+@auth.route('/clearcart')
+@login_required
+def clearcart():
+    CarrelloProdotto.query.filter_by(idu=current_user.idutente).delete()
+    db.session.commit()
+    flash('Carrello svuotato', 'success')
+    return redirect(url_for('auth.carrello'))
+
