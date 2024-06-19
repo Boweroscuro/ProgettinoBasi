@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
+
 {% block title %}
 Controllo Ordini
 {% endblock %}
 
 {% block content %}
 <div class="container mt-4">
+    <h2 class="text-center mb-4">Il tuo Ordine</h2>
     <div class="row">
         <div class="col-md-12">
         <table class="table table-sm">
@@ -55,7 +57,7 @@ Controllo Ordini
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+        <a href="{{ url_for('auth.carrello') }}" class="btn btn-success">Indietro</a>
     </div>
   </div>
 </div>
