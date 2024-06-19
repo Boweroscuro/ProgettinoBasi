@@ -73,11 +73,11 @@ class Ordini(db.Model):
     idordine = db.Column(db.Integer, primary_key = True)
     metodo_di_pagamento = db.Column(db.Text, nullable = False)
     stato = db.Column(db.Text, nullable = False)
-<<<<<<< HEAD
-    data = db.Column(db.Date, nullable = False, default=datetime)
-=======
+
     dataordine = db.Column(db.Date, nullable = False, default=datetime)
->>>>>>> 4b78ccee277230b96465b09fed4b96103aa03662
+
+    dataordine = db.Column(db.Date, nullable = False, default=datetime)
+
 
     idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
 

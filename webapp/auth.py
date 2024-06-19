@@ -340,11 +340,6 @@ def clearcart():
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
 
-<<<<<<< HEAD
-=======
-
-# Update Order
->>>>>>> 4b78ccee277230b96465b09fed4b96103aa03662
 @auth.route('/updateordine/<int:idordine>', methods=['POST'])
 def updateordine(idordine):
     ordine = Ordini.query.get_or_404(idordine)
@@ -370,10 +365,7 @@ def deleteordine(idordine):
 @auth.route('/controllo_ordini')
 @login_required
 def controllo_ordini():
-<<<<<<< HEAD
-    ordini = Ordini.query.all()
-    return render_template('controllo_ordini.html', ordini=ordini)
-=======
+
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))
 
@@ -390,5 +382,5 @@ def controllo_ordini():
     grand_total = subtotal + tax
 
     return render_template('controllo_ordini.html', carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user)
->>>>>>> 4b78ccee277230b96465b09fed4b96103aa03662
+
 
