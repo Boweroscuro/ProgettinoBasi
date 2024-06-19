@@ -1,3 +1,4 @@
+import datetime
 from webapp import db
 from flask_login import UserMixin
 
@@ -22,7 +23,8 @@ class Utenti(db.Model, UserMixin):
     username = db.Column(db.Text, nullable = False)
     email = db.Column(db.Text, nullable = False)
     password_hash = db.Column(db.Text, nullable= False)
-    privilegi = db.Column(db.Boolean)
+    privilegi = db.Column(db.Boolean, nullable = False)
+    isadmin = db.Column(db.Boolean, nullable = False)
 
     def get_id(self):
         return self.idutente
@@ -69,9 +71,11 @@ class Ordini(db.Model):
     __tablename__ = 'ordini'
 
     idordine = db.Column(db.Integer, primary_key = True)
-    spedizione = db.Column(db.Text, nullable = False)
     metodo_di_pagamento = db.Column(db.Text, nullable = False)
     stato = db.Column(db.Text, nullable = False)
+    data = db.Column(db.Date, nullable = False, default=datetime.utcnow)
+
+    idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
 
 class Recensioni(db.Model):
     __tablename__ = 'recensioni'
@@ -88,7 +92,4 @@ class CarrelloProdotto(db.Model):
     idp = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), nullable=False)
     quantità = db.Column(db.Integer, nullable=False, default=1)
 
-    prodotto = db.relationship('Prodotti', backref='carrello_prodotti')#
-
-    def __repr__(self):
-        return f'CarrelloProdotto(User ID: {self.idu}, Prodotto ID: {self.idp}, Quantità: {self.quantità})'
+    prodotto = db.relationship('Prodotti', backref='carrello_prodotti')

@@ -61,7 +61,7 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            utente = Utenti(nome = nome, cognome = cognome, username = username, email = email, password_hash = generate_password_hash(password1), privilegi = privilegi, indirizzo_ass = [])
+            utente = Utenti(nome = nome, cognome = cognome, username = username, email = email, password_hash = generate_password_hash(password1), privilegi = privilegi, indirizzo_ass = [], isadmin = False)
             db.session.add(utente)
             db.session.commit()
             return redirect(url_for('auth.sign_up2' , user_id = utente.idutente))
@@ -220,7 +220,6 @@ def get_sottocategorie():
     return jsonify(sottocategorie=sottocategorie_list)
 
 
-
 @auth.route('/homeprodot/<int:idcategoria>') 
 @login_required
 def homeprodot(idcategoria):
@@ -333,4 +332,5 @@ def clearcart():
     db.session.commit()
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
+
 
