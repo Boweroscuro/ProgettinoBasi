@@ -40,7 +40,7 @@ CarrelloProva
         </table>
         <table class="table table-sm">
            <tr>
-               <td><a href="{{ url_for('auth.controllo_ordini', idordine=ordine.id) }}" class="btn btn-success">Order now</a></td>
+               <td><a href="{{ url_for('auth.checkout') }}" class="btn btn-success">Order now</a></td>
                <td width="35%"></td>
                <td><h5>Tassa: ${{ "%.2f"|format(tax) }}</h5></td>
                <td><h5>Gran Totale: ${{ "%.2f"|format(grand_total) }}</h5></td>
