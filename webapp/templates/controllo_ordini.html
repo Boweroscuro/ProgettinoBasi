@@ -18,11 +18,9 @@ Controllo Ordini
                     <th>Cliente</th>
                     <th>Data</th>
                     <th>Prodotti</th>
+                    <th>Quantità</th>
                     <th>Quantità Totale</th>
                     <th>Totale</th>
-                    <th>Stato</th>
-                    <th>Update</th>
-                    <th>Delete</th>
                 </tr>
             </thead> 
             <tbody>
@@ -34,28 +32,24 @@ Controllo Ordini
                     <td>
                         <ul>
                             {% for prodotto in carrello_prodotti %}
-                            <br>{{ prodotto.prodotto.nome }} ({{ prodotto.quantità }})</br>
+                            <li>{{ prodotto.prodotto.nome }} </li>
                             {% endfor %}
                         </ul>
                     </td>
+                    <td>
+                        <ul>
+                            {% for prodotto in carrello_prodotti %}
+                            <ul>{{ prodotto.quantità }}</ul> 
+                            {% endfor %}
+                        </ul>
+                    </td>
+
                     <td>{{ totquantità }}</td>
                     <td>${{ "%.2f"|format(grand_total) }}</td>
-                    <form action="{{ url_for('auth.updateordine', idordine=ordine.idordine) }}" method="post">
-                    <td>
-                        <select name="stato" class="form-control">
-                            <option value="In Attesa" {% if ordine.stato == 'In Attesa' %}selected{% endif %}>In Attesa</option>
-                            <option value="Spedito" {% if ordine.stato == 'Spedito' %}selected{% endif %}>Spedito</option>
-                            <option value="Consegnato" {% if ordine.stato == 'Consegnato' %}selected{% endif %}>Consegnato</option>
-                            <option value="Annullato" {% if ordine.stato == 'Annullato' %}selected{% endif %}>Annullato</option>
-                        </select>
-                    </td>
-                    <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
-                    </form>
-                    <td><a href="{{ url_for('auth.deleteordine', idordine=ordine.idordine) }}" class="btn btn-sm btn-danger">Delete</a></td>
                 </tr>
             </tbody>
         </table>
-        <a href="{{ url_for('auth.carrello') }}" class="btn btn-success">Indietro</a>
+        <a href="{{ url_for('auth.deleteordine', idordine=ordine.idordine) }}" class="btn btn-success">Indietro</a>
     </div>
   </div>
 </div>
