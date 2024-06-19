@@ -17,10 +17,14 @@ Prodotti in vendita
                 <p>Descrizione dettagliata del prodotto</p>
                 <p> {{ prodotto.descrizione }} </p>
                 <!-- Altri dettagli del prodotto come prezzo, disponibilità, etc. -->
-                {% if not utente.privilegi %}   
+                {% if not utente.privilegi %} 
+                    {% if prodotto.quantità > 0 %}  
                     <form id="aggiungi-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.aggcarrello', idprodotto=prodotto.idprodotto) }}" method="post">
                         <button type="submit" class="btn btn-primary">Aggiungi al carrello</button>
                     </form>
+                    {% else %}
+                    <p>Prodotto non disponibile</p>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

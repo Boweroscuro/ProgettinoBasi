@@ -137,6 +137,10 @@ def aggcarrello(idprodotto):
     # Controlla se il prodotto è già nel carrello dell'utente
     carrello_prodotto = CarrelloProdotto.query.filter_by(idu=current_user.idutente, idp=idprodotto).first()
 
+    if prodotto.quantità <= 0:
+        flash(f'Il prodotto "{prodotto.nome}" non è disponibile in quantità sufficiente.', 'error')
+        return redirect(url_for('auth.prodotto', idprodotto=idprodotto))
+ 
     if carrello_prodotto:
         # Se il prodotto è già nel carrello, incrementa la quantità
         carrello_prodotto.quantità += 1
@@ -299,12 +303,23 @@ def carrello():
 @auth.route('/updatecart/<int:idprodotto>', methods=['POST'])
 @login_required   
 def updatecart(idprodotto):
+
+    prodotto = Prodotti.query.get_or_404(idprodotto)
     carrello_prodotto = CarrelloProdotto.query.filter_by(idu=current_user.idutente, idp=idprodotto).first()
-    if carrello_prodotto:
-        nuova_quantita = int(request.form['quantità'])
-        carrello_prodotto.quantità = nuova_quantita
-        db.session.commit()
-        flash(f'Quantità di "{carrello_prodotto.prodotto.nome}" aggiornata a {nuova_quantita}', 'success')
+    nuova_quantita = int(request.form['quantità'])
+
+    if nuova_quantita <= 0:
+        flash('La quantità deve essere maggiore di zero.', 'error')
+        return redirect(url_for('auth.carrello'))
+
+    if nuova_quantita > prodotto.quantità:
+        flash(f'Non ci sono abbastanza "{prodotto.nome}" disponibili in magazzino.', 'error')
+        return redirect(url_for('auth.carrello'))
+    
+    
+    carrello_prodotto.quantità = nuova_quantita
+    db.session.commit()
+    flash(f'Quantità di "{carrello_prodotto.prodotto.nome}" aggiornata a {nuova_quantita}', 'success')
     return redirect(url_for('auth.carrello'))
 
 @auth.route('/deleteitem/<int:id>', methods=['GET'])
@@ -325,13 +340,9 @@ def clearcart():
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
 
-<<<<<<< HEAD
-
-=======
-# Update Order
 @auth.route('/updateordine/<int:idordine>', methods=['POST'])
 def updateordine(idordine):
-    ordine = Ordine.query.get_or_404(idordine)
+    ordine = Ordini.query.get_or_404(idordine)
     nuovo_stato = request.form.get('stato')
     if nuovo_stato:
         ordine.stato = nuovo_stato
@@ -344,7 +355,7 @@ def updateordine(idordine):
 # Delete Order
 @auth.route('/deleteordine/<int:idordine>', methods=['GET', 'POST'])
 def deleteordine(idordine):
-    ordine = Ordine.query.get_or_404(idordine)
+    ordine = Ordini.query.get_or_404(idordine)
     db.session.delete(ordine)
     db.session.commit()
     flash('Ordine eliminato con successo', 'success')
@@ -353,6 +364,6 @@ def deleteordine(idordine):
 # Controllo Ordini
 @auth.route('/controllo_ordini')
 def controllo_ordini():
-    ordini = Ordine.query.all()
+    ordini = Ordini.query.all()
     return render_template('controllo_ordini.html', ordini=ordini)
->>>>>>> c544324516c598c6307b475cd45ec9e7a991580e
+
