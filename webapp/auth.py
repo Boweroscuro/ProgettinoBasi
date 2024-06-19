@@ -381,7 +381,7 @@ def deleteordine(idordine):
     return redirect(url_for('auth.controllo_ordini'))
 
 # Controllo Ordini
-@auth.route('/controllo_ordini/<int:idordine>') #
+@auth.route('/controllo_ordini/<int:idordine>') 
 @login_required
 def controllo_ordini(idordine): 
 
