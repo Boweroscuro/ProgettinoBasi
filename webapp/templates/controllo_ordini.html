@@ -26,9 +26,8 @@ Controllo Ordini
                 </tr>
             </thead> 
             <tbody>
-                {% for ordine in ordini %}
                 <tr>
-                    <td>{{ loop.index }}</td>
+                    <td>1</td>
                     <td>{{ ordine.id }}</td>
                     <td>{{ ordine.cliente.nome }}</td>
                     <td>{{ ordine.data }}</td>
@@ -54,7 +53,6 @@ Controllo Ordini
                     </form>
                     <td><a href="{{ url_for('auth.deleteordine', idordine=ordine.id) }}" class="btn btn-sm btn-danger">Delete</a></td>
                 </tr>
-                {% endfor %}
             </tbody>
         </table>
         <a href="{{ url_for('auth.carrello') }}" class="btn btn-success">Indietro</a>

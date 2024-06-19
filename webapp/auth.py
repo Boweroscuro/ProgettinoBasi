@@ -362,13 +362,15 @@ def deleteordine(idordine):
     return redirect(url_for('auth.controllo_ordini'))
 
 # Controllo Ordini
-@auth.route('/controllo_ordini')
+@auth.route('/controllo_ordini/<int:idordine>') #
 @login_required
-def controllo_ordini():
+def controllo_ordini(idordine): 
 
     if not current_user.is_authenticated:
         return redirect(url_for('auth.login'))
 
+    ordine = Ordini.query.get_or_404(idordine)
+    
     # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
     carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
 
@@ -381,6 +383,6 @@ def controllo_ordini():
     # Calcola il totale comprensivo di tassa
     grand_total = subtotal + tax
 
-    return render_template('controllo_ordini.html', carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user)
+    return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user)
 
 
