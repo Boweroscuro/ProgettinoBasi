@@ -230,34 +230,55 @@ def homeprodot(idcategoria):
 
     categoria_padre = Categorie.query.filter_by(idcategoria=idcategoria).first()  # Ottieni la categoria corrente
 
+    categorie_ids = [idcategoria]
+    
     if categoria_padre.idgenitore is None:  # Se la categoria non ha un genitore, è una categoria principale
         categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
         prodotti = Prodotti.query.filter(Prodotti.idc.in_([c.idcategoria for c in categorie_figlie])).all()
+        categorie_ids.extend([c.idcategoria for c in categorie_figlie])
         
     else:  # Se la categoria ha un genitore, è una sottocategoria
         prodotti = Prodotti.query.filter(Prodotti.idc == idcategoria).all()  # Mostra solo i prodotti della sottocategoria
-        categorie_figlie = None  # Non ci sono sottocategorie per le sottocategorie
-
-
+        categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
+    
     #da qui
     search = request.args.get('search')
     selected_categoria = request.args.get('categoria')
 
+    prodotti_query = Prodotti.query.filter(Prodotti.idc.in_(categorie_ids))
+
     if search:
         # Esegui una ricerca generica per i prodotti che corrispondono al termine di ricerca
-        #prodotti = Prodotti.query.filter(Prodotti.nome.ilike(f'%{search}%')).all()
-        prodotti = Prodotti.query.filter(Prodotti.nome.ilike(f'%{search}%')).all()
-    
+        prodotti_query = prodotti_query.filter(Prodotti.nome.ilike(f'%{search}%'))
+
     if selected_categoria:
-        # Filtra i prodotti per la categoria selezionata
-        prodotti = Prodotti.query.filter(Prodotti.idc == selected_categoria).all()
+        # Ottieni tutti gli ID delle sottocategorie nidificate sotto la categoria selezionata
+        sottocategorie_ids = get_all_subcategories(selected_categoria)
+        sottocategorie_ids.append(selected_categoria)  # Aggiungi anche la categoria selezionata stessa
+        # Filtra i prodotti per l'ID della categoria selezionata e tutte le sue sottocategorie
+        prodotti_query = prodotti_query.filter(Prodotti.idc.in_(sottocategorie_ids))
+
+    prodotti = prodotti_query.all()
     
-   
     # Nessuna ricerca specificata, mostra tutti i prodotti
     categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
     
-    
     return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, categorie = categorie, idcategoria = idcategoria, categorie_figlie=categorie_figlie)
+
+def get_all_subcategories(categoria_id):
+    """ Ottieni tutti gli ID delle sottocategorie nidificate sotto la categoria specificata """
+    sottocategorie_ids = []
+    queue = [categoria_id]
+
+    while queue:
+        current_id = queue.pop(0)
+        sottocategorie = Categorie.query.filter_by(idgenitore=current_id).all()
+        for sottocategoria in sottocategorie:
+            sottocategorie_ids.append(sottocategoria.idcategoria)
+            queue.append(sottocategoria.idcategoria)
+
+    return sottocategorie_ids
+
 
 @auth.route('/aggcategoria', methods=['GET', 'POST'])
 @login_required
@@ -283,7 +304,7 @@ def aggcategoria():
         return redirect(url_for('auth.aggcategoria'))
     
     # Ottieni tutte le categorie principali per visualizzarle nella form
-    categorie_principali = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
+    categorie_principali = Categorie.query.all()
 
     return render_template('aggcategoria.html', utente=current_user, categorie_principali=categorie_principali)
 
