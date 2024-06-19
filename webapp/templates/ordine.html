@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+Controllo Ordini
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Sr</th>
+                    <th>ID Ordine</th>
+                    <th>Cliente</th>
+                    <th>Data</th>
+                    <th>Prodotti</th>
+                    <th>Quantità Totale</th>
+                    <th>Totale</th>
+                    <th>Stato</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead> 
+            <tbody>
+                {% for ordine in ordini %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ ordine.id }}</td>
+                    <td>{{ ordine.cliente.nome }}</td>
+                    <td>{{ ordine.data }}</td>
+                    <td>
+                        <ul>
+                            {% for prodotto in ordine.prodotti %}
+                            <li>{{ prodotto.nome }} ({{ prodotto.quantità }})</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{ ordine.quantità_totale }}</td>
+                    <td>${{ "%.2f"|format(ordine.totale) }}</td>
+                    <form action="{{ url_for('auth.updateordine', idordine=ordine.id) }}" method="post">
+                    <td>
+                        <select name="stato" class="form-control">
+                            <option value="In Attesa" {% if ordine.stato == 'In Attesa' %}selected{% endif %}>In Attesa</option>
+                            <option value="Spedito" {% if ordine.stato == 'Spedito' %}selected{% endif %}>Spedito</option>
+                            <option value="Consegnato" {% if ordine.stato == 'Consegnato' %}selected{% endif %}>Consegnato</option>
+                            <option value="Annullato" {% if ordine.stato == 'Annullato' %}selected{% endif %}>Annullato</option>
+                        </select>
+                    </td>
+                    <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
+                    </form>
+                    <td><a href="{{ url_for('auth.deleteordine', idordine=ordine.id) }}" class="btn btn-sm btn-danger">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}

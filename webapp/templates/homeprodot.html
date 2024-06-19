@@ -55,10 +55,11 @@ Homepage
                 </div>
             </div>
         </div>
-        {% if loop.index % 3 == 0 or loop.last %}
-            </div>
+        {% if loop.index % 3 == 0 %}
+            </div><div class="row">
         {% endif %}
     {% endfor %}
+    </div>
     <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
 </div>
 {% endblock %}
