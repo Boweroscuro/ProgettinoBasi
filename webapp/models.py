@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 from webapp import db
 from flask_login import UserMixin
 
@@ -70,13 +70,10 @@ class Prodotti(db.Model):
 class Ordini(db.Model):
     __tablename__ = 'ordini'
 
-    idordine = db.Column(db.Integer, primary_key = True, autoincrement=True)
+    idordine = db.Column(db.Integer, primary_key = True)
     metodo_di_pagamento = db.Column(db.Text, nullable = False)
     stato = db.Column(db.Text, nullable = False)
-
-    dataordine = db.Column(db.Date, nullable = False, default=datetime)
-
-
+    dataordine = db.Column(db.Date, nullable = False, default=datetime.now().date)
 
     idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
 

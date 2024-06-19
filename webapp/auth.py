@@ -1,4 +1,3 @@
-import base64
 from io import BytesIO
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, send_file, url_for
 from .models import *
@@ -380,43 +379,23 @@ def deleteordine(idordine):
     flash('Ordine eliminato con successo', 'success')
     return redirect(url_for('auth.controllo_ordini'))
 
-# Controllo Ordini
-@auth.route('/controllo_ordini/<int:idordine>') 
-@login_required
-def controllo_ordini(idordine): 
-
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login'))
-
-    ordine = Ordini.query.get_or_404(idordine)
-    
-    # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
-    carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
-
-    # Calcola la somma dei subtotali
-    subtotal = sum(item.prodotto.costo * item.quantità for item in carrello_prodotti)
-
-    # Calcola la tassa (supponiamo il 10%)
-    tax = subtotal / 10
-
-    # Calcola il totale comprensivo di tassa
-    grand_total = subtotal + tax
-
-    return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user)
-
 @auth.route('/checkout')
+@login_required
 def checkout():
     # Recupera il carrello dell'utente corrente (presumibilmente già autenticato)
-    carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+    carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).first()
 
-    
+    if not carrello:
+        flash('Il carrello dell\'utente è vuoto.', 'error')
+        return redirect(url_for('auth.carrello'))
+
     # Crea un nuovo ordine utilizzando i dati del carrello
-    nuovo_ordine = Ordini(
+    nuovo_ordine = Ordini( 
         metodo_di_pagamento='metodo_scelto_dall_utente',  # Sostituire con il metodo effettivo
-        stato='in_attesa',  # Stato iniziale dell'ordine
-        idcp=[item.idcp for item in carrello],  # Esempio di come potresti passare l'ID del carrello
-        dataordine=datetime
+        stato ='in_attesa',  # Stato iniziale dell'ordine
+        idcp = carrello.idcp 
     )
+
 
     try:
         # Aggiungi l'ordine al database
@@ -432,6 +411,36 @@ def checkout():
     except Exception as e:
         db.session.rollback()
         flash('Si è verificato un errore durante la creazione dell\'ordine.', 'error')
+        return redirect(url_for('auth.carrello'))
 
-    return redirect(url_for('auth.controllo_ordini', idordine=nuovo_ordine.idordine))
+
+    return redirect(url_for('auth.controllo_ordini', idordine = nuovo_ordine.idordine))
+
+
+
+# Controllo Ordini
+@auth.route('/controllo_ordini/<int:idordine>', methods=['GET', 'POST']) 
+@login_required
+def controllo_ordini(idordine): 
+
+    #if not current_user.is_authenticated:
+     #   return redirect(url_for('auth.login'))
+
+    ordine = Ordini.query.get_or_404(idordine)
+    
+    # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
+    carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+
+    # Calcola la somma dei subtotali
+    subtotal = sum(item.prodotto.costo * item.quantità for item in carrello_prodotti)
+
+    # Calcola la tassa (supponiamo il 10%)
+    tax = subtotal / 10
+
+    # Calcola il totale comprensivo di tassa
+    grand_total = subtotal + tax
+
+    totquantità = sum(item.quantità for item in carrello_prodotti) 
+
+    return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user, totquantità = totquantità)
 

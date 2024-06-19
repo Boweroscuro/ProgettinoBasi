@@ -28,19 +28,19 @@ Controllo Ordini
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>{{ ordine.id }}</td>
-                    <td>{{ ordine.cliente.nome }}</td>
-                    <td>{{ ordine.data }}</td>
+                    <td>{{ ordine.idordine }}</td>
+                    <td>{{ utente.nome }}</td>
+                    <td>{{ ordine.dataordine }}</td>
                     <td>
                         <ul>
-                            {% for prodotto in ordine.prodotti %}
-                            <li>{{ prodotto.nome }} ({{ prodotto.quantità }})</li>
+                            {% for prodotto in carrello_prodotti %}
+                            <br>{{ prodotto.prodotto.nome }} ({{ prodotto.quantità }})</br>
                             {% endfor %}
                         </ul>
                     </td>
-                    <td>{{ ordine.quantità_totale }}</td>
-                    <td>${{ "%.2f"|format(ordine.totale) }}</td>
-                    <form action="{{ url_for('auth.updateordine', idordine=ordine.id) }}" method="post">
+                    <td>{{ totquantità }}</td>
+                    <td>${{ "%.2f"|format(grand_total) }}</td>
+                    <form action="{{ url_for('auth.updateordine', idordine=ordine.idordine) }}" method="post">
                     <td>
                         <select name="stato" class="form-control">
                             <option value="In Attesa" {% if ordine.stato == 'In Attesa' %}selected{% endif %}>In Attesa</option>
@@ -51,7 +51,7 @@ Controllo Ordini
                     </td>
                     <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
                     </form>
-                    <td><a href="{{ url_for('auth.deleteordine', idordine=ordine.id) }}" class="btn btn-sm btn-danger">Delete</a></td>
+                    <td><a href="{{ url_for('auth.deleteordine', idordine=ordine.idordine) }}" class="btn btn-sm btn-danger">Delete</a></td>
                 </tr>
             </tbody>
         </table>
