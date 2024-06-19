@@ -89,6 +89,26 @@ def sign_up2():
 
     return render_template('sign_up2.html', utente = current_user)
 
+@auth.route('/aggiungi_indirizzo', methods=['GET', 'POST'])
+@login_required 
+def aggiungi_indirizzo():
+    if request.method == 'POST':
+        via = request.form.get('via')
+        numero = request.form.get('numero')
+        cap = request.form.get('cap')
+        citta = request.form.get('citta')
+
+        indirizzo = Indirizzi(via=via, numero=numero, cap=cap, città = citta, isdefault = False)
+        indirizzo.utente_ass.append(current_user)
+        db.session.add(indirizzo)
+        db.session.commit()
+        
+        flash('Indirizzo aggiunto!', category='success')
+        return redirect(url_for('auth.aggiungi_indirizzo'))
+
+    return render_template('aggiungi_indirizzo.html', utente = current_user)
+
+
 @auth.route('/profilo')
 @login_required  
 def user_profile():

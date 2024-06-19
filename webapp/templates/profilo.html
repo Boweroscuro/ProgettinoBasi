@@ -5,16 +5,27 @@ Profilo Utente
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 align="center">Profilo Utente</h2>
-    <div>
-        <p><strong>Nome:</strong> {{ utente.nome }}</p>
-        <p><strong>Cognome:</strong> {{ utente.cognome }}</p>
-        <p><strong>Username:</strong> {{ utente.username }}</p>
-        <p><strong>Email:</strong> {{ utente.email }}</p>
-        <div align="center">
-            <a href="{{ url_for('auth.logout') }}" class="btn btn-success">Logout</a>
-            <a href="{{ url_for('views.home') }}" class="btn btn-danger">X</a>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Profilo Utente</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Nome:</strong> {{ utente.nome }}</li>
+                        <li class="list-group-item"><strong>Cognome:</strong> {{ utente.cognome }}</li>
+                        <li class="list-group-item"><strong>Username:</strong> {{ utente.username }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ utente.email }}</li>
+                    </ul>
+                    <div class="mt-3 text-center">
+                        <a href="{{ url_for('auth.aggiungi_indirizzo') }}" class="btn btn-success">Aggiungi indirizzo</a>
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ml-2">Logout</a>
+                        <a href="{{ url_for('views.home') }}" class="btn btn-secondary ml-2">Torna alla Home</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
