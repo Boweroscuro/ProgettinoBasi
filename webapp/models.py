@@ -76,7 +76,6 @@ class Ordini(db.Model):
 
     dataordine = db.Column(db.Date, nullable = False, default=datetime)
 
-    dataordine = db.Column(db.Date, nullable = False, default=datetime)
 
 
     idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
