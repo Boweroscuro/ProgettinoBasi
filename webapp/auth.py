@@ -288,8 +288,6 @@ def aggcategoria():
         immagine = request.files['immagine']
         idgenitore = request.form.get('idgenitore')  # Aggiunto per ottenere l'id del genitore dalla form
 
-        print(f"Nome: {nome}, IdGenitore: {idgenitore}")
-
         if idgenitore == '':
             idgenitore = None
 
