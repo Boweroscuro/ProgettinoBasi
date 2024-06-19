@@ -377,7 +377,7 @@ def clearcart():
     db.session.commit()
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
-
+"""
 @auth.route('/updateordine/<int:idordine>', methods=['POST'])
 def updateordine(idordine):
     ordine = Ordini.query.get_or_404(idordine)
@@ -389,7 +389,7 @@ def updateordine(idordine):
     else:
         flash('Errore durante l\'aggiornamento dello stato dell\'ordine', 'danger')
     return redirect(url_for('auth.controllo_ordini'))
-
+"""
 # Delete Order
 @auth.route('/deleteordine/<int:idordine>', methods=['GET', 'POST'])
 def deleteordine(idordine):
@@ -397,7 +397,7 @@ def deleteordine(idordine):
     db.session.delete(ordine)
     db.session.commit()
     flash('Ordine eliminato con successo', 'success')
-    return redirect(url_for('auth.controllo_ordini'))
+    return redirect(url_for('auth.carrello', idordine=ordine.idordine))
 
 
 
@@ -424,11 +424,6 @@ def checkout():
         db.session.add(nuovo_ordine)
         db.session.commit()
         flash('Ordine creato con successo!', 'success')
-        
-        # Ora potresti svuotare il carrello o fare altre azioni post ordine
-        # Esempio:
-        # CarrelloProdotto.query.filter_by(idu=current_user.id).delete()
-        # db.session.commit()
 
     except Exception as e:
         db.session.rollback()
