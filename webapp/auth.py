@@ -340,6 +340,11 @@ def clearcart():
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
 
+<<<<<<< HEAD
+=======
+
+# Update Order
+>>>>>>> 4b78ccee277230b96465b09fed4b96103aa03662
 @auth.route('/updateordine/<int:idordine>', methods=['POST'])
 def updateordine(idordine):
     ordine = Ordini.query.get_or_404(idordine)
@@ -363,7 +368,27 @@ def deleteordine(idordine):
 
 # Controllo Ordini
 @auth.route('/controllo_ordini')
+@login_required
 def controllo_ordini():
+<<<<<<< HEAD
     ordini = Ordini.query.all()
     return render_template('controllo_ordini.html', ordini=ordini)
+=======
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+
+    # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
+    carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+
+    # Calcola la somma dei subtotali
+    subtotal = sum(item.prodotto.costo * item.quantità for item in carrello_prodotti)
+
+    # Calcola la tassa (supponiamo il 10%)
+    tax = subtotal / 10
+
+    # Calcola il totale comprensivo di tassa
+    grand_total = subtotal + tax
+
+    return render_template('controllo_ordini.html', carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user)
+>>>>>>> 4b78ccee277230b96465b09fed4b96103aa03662
 
