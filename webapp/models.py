@@ -70,7 +70,7 @@ class Prodotti(db.Model):
 class Ordini(db.Model):
     __tablename__ = 'ordini'
 
-    idordine = db.Column(db.Integer, primary_key = True)
+    idordine = db.Column(db.Integer, primary_key = True, autoincrement=True)
     metodo_di_pagamento = db.Column(db.Text, nullable = False)
     stato = db.Column(db.Text, nullable = False)
 

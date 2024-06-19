@@ -404,4 +404,34 @@ def controllo_ordini(idordine):
 
     return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user)
 
+@auth.route('/checkout')
+def checkout():
+    # Recupera il carrello dell'utente corrente (presumibilmente già autenticato)
+    carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+
+    
+    # Crea un nuovo ordine utilizzando i dati del carrello
+    nuovo_ordine = Ordini(
+        metodo_di_pagamento='metodo_scelto_dall_utente',  # Sostituire con il metodo effettivo
+        stato='in_attesa',  # Stato iniziale dell'ordine
+        idcp=[item.idcp for item in carrello],  # Esempio di come potresti passare l'ID del carrello
+        dataordine=datetime
+    )
+
+    try:
+        # Aggiungi l'ordine al database
+        db.session.add(nuovo_ordine)
+        db.session.commit()
+        flash('Ordine creato con successo!', 'success')
+        
+        # Ora potresti svuotare il carrello o fare altre azioni post ordine
+        # Esempio:
+        # CarrelloProdotto.query.filter_by(idu=current_user.id).delete()
+        # db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        flash('Si è verificato un errore durante la creazione dell\'ordine.', 'error')
+
+    return redirect(url_for('auth.controllo_ordini', idordine=nuovo_ordine.idordine))
 
