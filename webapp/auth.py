@@ -289,14 +289,6 @@ def get_immagine_cat(idcategoria):
     categoria = Categorie.query.get_or_404(idcategoria)
     return send_file(BytesIO(categoria.immagine), mimetype='image/jpeg')
 
-    """
-    @auth.route('/carrello', methods=['GET'])
-    @login_required
-    def carrello():
-        prodotti_carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
-    
-        return render_template('carrello.html', utente = current_user, prodotti = prodotti_carrello)
-    """
 @auth.route('/carrello', methods=['GET', 'POST'])
 def carrello():
     carrello_prodotti = db.session.query(CarrelloProdotto).filter_by(idu=current_user.idutente).all()
@@ -334,3 +326,30 @@ def clearcart():
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
 
+# Update Order
+@auth.route('/updateordine/<int:idordine>', methods=['POST'])
+def updateordine(idordine):
+    ordine = Ordine.query.get_or_404(idordine)
+    nuovo_stato = request.form.get('stato')
+    if nuovo_stato:
+        ordine.stato = nuovo_stato
+        db.session.commit()
+        flash('Stato dell\'ordine aggiornato con successo', 'success')
+    else:
+        flash('Errore durante l\'aggiornamento dello stato dell\'ordine', 'danger')
+    return redirect(url_for('auth.controllo_ordini'))
+
+# Delete Order
+@auth.route('/deleteordine/<int:idordine>', methods=['GET', 'POST'])
+def deleteordine(idordine):
+    ordine = Ordine.query.get_or_404(idordine)
+    db.session.delete(ordine)
+    db.session.commit()
+    flash('Ordine eliminato con successo', 'success')
+    return redirect(url_for('auth.controllo_ordini'))
+
+# Controllo Ordini
+@auth.route('/controllo_ordini')
+def controllo_ordini():
+    ordini = Ordine.query.all()
+    return render_template('controllo_ordini.html', ordini=ordini)
