@@ -379,6 +379,8 @@ def deleteordine(idordine):
     flash('Ordine eliminato con successo', 'success')
     return redirect(url_for('auth.carrello', idordine=ordine.idordine))
 
+
+
 @auth.route('/checkout')
 @login_required
 def checkout():
