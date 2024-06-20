@@ -30,7 +30,7 @@ class Utenti(db.Model, UserMixin):
         return self.idutente
     
     indirizzo_ass = db.relationship('Indirizzi', secondary = UtentiIndirizzi, backref=db.backref('utente_ass'))
-    prodotto_carrello = db.relationship('CarrelloProdotto', backref='utente')#
+    prodotto_carrello = db.relationship('CarrelloProdotto', backref='utente')
 
 
 class Indirizzi(db.Model):
@@ -74,6 +74,7 @@ class Ordini(db.Model):
     metodo_di_pagamento = db.Column(db.Text, nullable = False)
     stato = db.Column(db.Text, nullable = False)
     dataordine = db.Column(db.Date, nullable = False, default=datetime.now().date)
+    completato = db.Column(db.Boolean, nullable = False)
 
     idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
 
@@ -93,3 +94,13 @@ class CarrelloProdotto(db.Model):
     quantità = db.Column(db.Integer, nullable=False, default=1)
 
     prodotto = db.relationship('Prodotti', backref='carrello_prodotti')
+
+class Storici(db.Model):
+    __tablename__ = 'storici'
+
+    idor = db.Column(db.Integer, db.ForeignKey('ordini.idordine'), nullable=False)
+    idpr = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), nullable=False)
+    qta = db.Column(db.Integer, nullable=False, default=1)
+    pagato = db.Column(db.Integer, nullable=False)
+
+    prodotto = db.relationship('Prodotti', backref='Storici')
