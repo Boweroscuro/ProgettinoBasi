@@ -100,6 +100,7 @@ class Storici(db.Model):
 
     idor = db.Column(db.Integer,  db.ForeignKey('ordini.idordine'), primary_key = True)
     idpr = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), primary_key = True)
+    idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'), nullable = False)
     qta = db.Column(db.Integer, nullable=False, default=1)
     pagato = db.Column(db.Integer, nullable=False)
 
