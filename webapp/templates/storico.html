@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+Storico Ordini
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Storico Ordini</h2>
+    {% if ordini %}
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Sr</th>
+                            <th>ID Ordine</th>
+                            <th>Data</th>
+                            <th>Prodotti</th>
+                            <th>Quantità Totale</th>
+                            <th>Totale Pagato</th>
+                            <th>Stato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ordine in ordini %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ ordine.idordine }}</td>
+                            <td>{{ ordine.dataordine.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <ul>
+                                    {% for item in ordine.prodotti %}
+                                    <li>{{ item.prodotto.nome }} ({{ item.quantità }})</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>{{ ordine.quantità_totale }}</td>
+                            <td>${{ "%.2f"|format(ordine.totale_pagato) }}</td>
+                            <td>{{ ordine.stato }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center">Non hai ordini precedenti.</p>
+    {% endif %}
+</div>
+{% endblock content %}
