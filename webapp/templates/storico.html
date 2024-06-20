@@ -27,7 +27,7 @@ Storico Ordini
                         <tr>
                             <td>{{ loop.index }}</td>
                             <td>{{ ordine.idordine }}</td>
-                            <td>{{ ordine.dataordine.strftime('%Y-%m-%d') }}</td>
+                            <!--<td>{{ ordine.dataordine.strftime('%Y-%m-%d') }}</td>-->
                             <td>
                                 <ul>
                                     {% for item in ordine.prodotti %}
