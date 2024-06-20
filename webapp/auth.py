@@ -437,16 +437,17 @@ def checkout():
     return redirect(url_for('auth.controllo_ordini', idordine = nuovo_ordine.idordine))
 
 
-
 # Controllo Ordini
 @auth.route('/controllo_ordini/<int:idordine>', methods=['GET', 'POST']) 
 @login_required
 def controllo_ordini(idordine): 
-
-    #if not current_user.is_authenticated:
-     #   return redirect(url_for('auth.login'))
-
+     
     ordine = Ordini.query.get_or_404(idordine)
+
+    indirizzo = Indirizzi.query.filter(
+    Indirizzi.utente_ass.any(idutente=current_user.idutente),  # Filtra per l'utente corrente nella relazione many-to-many
+    Indirizzi.isdefault == True  # Filtra per isdefault impostato a True
+    ).first()
     
     # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
     carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
@@ -462,7 +463,7 @@ def controllo_ordini(idordine):
 
     totquantità = sum(item.quantità for item in carrello_prodotti) 
 
-    return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user, totquantità = totquantità)
+    return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user, totquantità = totquantità, indirizzo=indirizzo)
 
 @auth.route('/storico')
 @login_required

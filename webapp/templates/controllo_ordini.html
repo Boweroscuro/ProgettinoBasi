@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Controllo Ordini
 {% endblock %}
@@ -16,6 +15,7 @@ Controllo Ordini
                     <th>Sr</th>
                     <th>ID Ordine</th>
                     <th>Cliente</th>
+                    <th>Indirizzo</th>
                     <th>Data</th>
                     <th>Prodotti</th>
                     <th>Quantità</th>
@@ -28,6 +28,13 @@ Controllo Ordini
                     <td>1</td>
                     <td>{{ ordine.idordine }}</td>
                     <td>{{ utente.nome }}</td>
+                    <td>
+                        {% if indirizzo %}
+                            {{ indirizzo.via }}, {{ indirizzo.numero }}, {{ indirizzo.cap }}, {{ indirizzo.città }}
+                        {% else %}
+                            Nessun indirizzo trovato
+                        {% endif %}
+                    </td>
                     <td>{{ ordine.dataordine }}</td>
                     <td>
                         <ul>
