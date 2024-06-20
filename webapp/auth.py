@@ -492,21 +492,22 @@ def completamento_ordine(idordine):
         prodotto = Prodotti.query.get(item.idp)
         if prodotto:
             prodotto.quantità -= item.quantità  # Riduci la quantità disponibile
-            db.session.add(prodotto) #non sono sicuro di questa
+            #db.session.add(prodotto) #non sono sicuro di questa
 
     ordine.completato = True
     ordine.idcp = None
-    clearcart()
+    CarrelloProdotto.query.filter_by(idu=current_user.idutente).delete() #modo poco elegante ma chissene frega
 
     # Esegui il commit delle modifiche al database
     db.session.commit()
+
     flash("Ordine completato con successo!", "success")
-    return render_template(url_for('auth.carrello'))
+    return render_template(url_for('auth.storico_ordini'))
 
 
 
 @auth.route('/storico')
 @login_required
 def storico_ordini():
-    ordini = db.session.query(Ordini).filter_by(idu=current_user.idutente).all()
+    ordini = Storici.query.filter_by(idu=current_user.idutente).all()
     return render_template('storico.html', ordini=ordini)
