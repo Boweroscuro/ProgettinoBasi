@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from webapp import db
 from flask_login import UserMixin
 
@@ -98,9 +98,9 @@ class CarrelloProdotto(db.Model):
 class Storici(db.Model):
     __tablename__ = 'storici'
 
-    idor = db.Column(db.Integer, db.ForeignKey('ordini.idordine'), nullable=False)
-    idpr = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), nullable=False)
+    idor = db.Column(db.Integer,  db.ForeignKey('ordini.idordine'), primary_key = True)
+    idpr = db.Column(db.Integer, db.ForeignKey('prodotti.idprodotto'), primary_key = True)
     qta = db.Column(db.Integer, nullable=False, default=1)
     pagato = db.Column(db.Integer, nullable=False)
 
-    prodotto = db.relationship('Prodotti', backref='Storici')
+    prodotto = db.relationship('Prodotti', backref='prodotti')
