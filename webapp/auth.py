@@ -377,6 +377,7 @@ def clearcart():
     db.session.commit()
     flash('Carrello svuotato', 'success')
     return redirect(url_for('auth.carrello'))
+
 """
 @auth.route('/updateordine/<int:idordine>', methods=['POST'])
 def updateordine(idordine):
@@ -398,6 +399,8 @@ def deleteordine(idordine):
     db.session.commit()
     flash('Ordine eliminato con successo', 'success')
     return redirect(url_for('auth.carrello', idordine=ordine.idordine))
+
+
 
 
 
@@ -462,3 +465,8 @@ def controllo_ordini(idordine):
 
     return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user, totquantità = totquantità, indirizzo=indirizzo)
 
+@auth.route('/storico')
+@login_required
+def storico_ordini():
+    ordini = db.session.query(Ordini).filter_by(idu=current_user.idutente).all()
+    return render_template('storico.html', ordini=ordini)
