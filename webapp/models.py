@@ -104,4 +104,4 @@ class Storici(db.Model):
     qta = db.Column(db.Integer, nullable=False, default=1)
     pagato = db.Column(db.Integer, nullable=False)
 
-    prodotto = db.relationship('Prodotti', backref='prodotti')
+    prodotto = db.relationship('Prodotti', backref='storico_prodotti')

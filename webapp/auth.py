@@ -502,12 +502,12 @@ def completamento_ordine(idordine):
     db.session.commit()
 
     flash("Ordine completato con successo!", "success")
-    return render_template(url_for('auth.storico_ordini'))
+    return redirect(url_for('auth.storico_ordini', utente = current_user))
 
 
 
-@auth.route('/storico')
+@auth.route('/storico', methods=['GET'])
 @login_required
 def storico_ordini():
     ordini = Storici.query.filter_by(idu=current_user.idutente).all()
-    return render_template('storico.html', ordini=ordini)
+    return render_template('storico.html', ordini=ordini, utente = current_user)

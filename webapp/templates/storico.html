@@ -26,18 +26,14 @@ Storico Ordini
                         {% for ordine in ordini %}
                         <tr>
                             <td>{{ loop.index }}</td>
-                            <td>{{ ordine.idordine }}</td>
-                            <!--<td>{{ ordine.dataordine.strftime('%Y-%m-%d') }}</td>-->
+                            <td>{{ ordine.idor }}</td>
                             <td>
                                 <ul>
-                                    {% for item in ordine.prodotti %}
-                                    <li>{{ item.prodotto.nome }} ({{ item.quantità }})</li>
-                                    {% endfor %}
+                                    {{ ordine.nome }}
                                 </ul>
                             </td>
-                            <td>{{ ordine.quantità_totale }}</td>
-                            <td>${{ "%.2f"|format(ordine.totale_pagato) }}</td>
-                            <td>{{ ordine.stato }}</td>
+                            <td>{{ ordine.qta }}</td>
+                            <td>${{ "%.2f"|format(ordine.pagato) }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
