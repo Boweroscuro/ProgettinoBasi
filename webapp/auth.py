@@ -418,7 +418,8 @@ def checkout():
     nuovo_ordine = Ordini( 
         metodo_di_pagamento='metodo_scelto_dall_utente',  # Sostituire con il metodo effettivo
         stato ='in_attesa',  # Stato iniziale dell'ordine
-        idcp = carrello.idcp 
+        idcp = carrello.idcp,
+        completato = False 
     )
 
 
@@ -464,6 +465,45 @@ def controllo_ordini(idordine):
     totquantità = sum(item.quantità for item in carrello_prodotti) 
 
     return render_template('controllo_ordini.html', ordine=ordine, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total, utente=current_user, totquantità = totquantità, indirizzo=indirizzo)
+
+
+
+@auth.route('/completamento_ordine/<int:idordine>')
+@login_required
+def completamento_ordine(idordine):
+    
+    ordine = Ordini.query.get_or_404(idordine)
+
+    carrello_prodotti = CarrelloProdotto.query.filter_by(idcp=ordine.idcp).all()
+
+    # Itera attraverso gli elementi del carrello e crea un record nello storico per ciascun prodotto
+    for item in carrello_prodotti:
+        storico = Storici(
+            idor=ordine.idordine,
+            idpr=item.idp,
+            idu=current_user.idutente,
+            qta=item.quantità,
+            pagato=item.prodotto.costo  # Calcola il totale pagato per questo prodotto
+        )
+
+        db.session.add(storico)
+
+        # Aggiorna la quantità disponibile del prodotto nel magazzino
+        prodotto = Prodotti.query.get(item.idp)
+        if prodotto:
+            prodotto.quantità -= item.quantità  # Riduci la quantità disponibile
+            db.session.add(prodotto) #non sono sicuro di questa
+
+    ordine.completato = True
+    ordine.idcp = None
+    clearcart()
+
+    # Esegui il commit delle modifiche al database
+    db.session.commit()
+    flash("Ordine completato con successo!", "success")
+    return render_template(url_for('auth.carrello'))
+
+
 
 @auth.route('/storico')
 @login_required
