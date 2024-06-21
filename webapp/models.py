@@ -76,7 +76,6 @@ class Ordini(db.Model):
 
     idordine = db.Column(db.Integer, primary_key = True)
     metodo_di_pagamento = db.Column(db.Text, nullable = False)
-    stato = db.Column(db.Text, nullable = False)
     dataordine = db.Column(db.Date, nullable = False, default=datetime.now().date)
     completato = db.Column(db.Boolean, nullable = False)
 

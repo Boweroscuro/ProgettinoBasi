@@ -450,7 +450,6 @@ def checkout():
     # Crea un nuovo ordine utilizzando i dati del carrello
     nuovo_ordine = Ordini( 
         metodo_di_pagamento='metodo_scelto_dall_utente',  # Sostituire con il metodo effettivo
-        stato ='in_attesa',  # Stato iniziale dell'ordine
         idcp = carrello.idcp,
         completato = False 
     )
@@ -478,10 +477,7 @@ def controllo_ordini(idordine):
      
     ordine = Ordini.query.get_or_404(idordine)
 
-    indirizzo = Indirizzi.query.filter(
-    Indirizzi.utente_ass.any(idutente=current_user.idutente),  # Filtra per l'utente corrente nella relazione many-to-many
-    Indirizzi.isdefault == True  # Filtra per isdefault impostato a True
-    ).first()
+    indirizzo = next((indirizzo for indirizzo in current_user.indirizzi_ass if indirizzo.isdefault), None)
     
     # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
     carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
@@ -532,7 +528,6 @@ def completamento_ordine(idordine):
             prodotto.quantità -= item.quantità  # Riduci la quantità disponibile
             #db.session.add(prodotto) #non sono sicuro di questa
 
-    ordine.completato = True
     ordine.idcp = None
     CarrelloProdotto.query.filter_by(idu=current_user.idutente).delete() #modo poco elegante ma chissene frega
 
