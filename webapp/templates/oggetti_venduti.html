@@ -17,9 +17,6 @@ Prodotti in vendita
             <div class="col-md-4 text-right" > 
                 <!--<a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>-->
             <p></p>
-            <form id="elimina-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.eliminaprodotto', idprodotto=prodotto.idprodotto) }}" method="post">
-                <button type="button" class="btn btn-danger elimina-btn" data-prodotto="{{ prodotto.idprodotto }}">Elimina</button>
-            </form>
             </div>
         </div>
         {% endfor %}
