@@ -17,25 +17,25 @@ Storico Ordini
                     </table>
                 {% endif %}
                 {% set current_order_id = ordine.idor %}
-                <h4>Ordine ID: {{ ordine.idor }}</h4>
+                
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Sr</th>
-                            <th>Prodotto</th>
-                            <th>Quantità</th>
-                            <th>Pagato</th>
-                            <th>Stato</th>
+                            <th class="col-stato">ID Ordine</th>
+                            <th class="col-prodotto">Prodotto</th>
+                            <th class="col-stato">Quantità</th>
+                            <th class="col-stato">Pagato</th>
+                            <th class="col-stato">Stato</th>
                         </tr>
                     </thead>
                     <tbody>
             {% endif %}
                         <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ ordine.prodotto.nome }}</td>
-                            <td>{{ ordine.qta }}</td>
-                            <td>${{ "%.2f"|format(ordine.pagato) }}</td>
-                            <td>{{ ordine.stato }}</td>
+                            <td class="col-stato">{{ ordine.idor }}</td>
+                            <td class="col-prodotto">{{ ordine.prodotto.nome }}</td>
+                            <td class="col-stato">{{ ordine.qta }}</td>
+                            <td class="col-stato">${{ "%.2f"|format(ordine.pagato) }}</td>
+                            <td class="col-stato">Completato</td>
                         </tr>
             {% if loop.last  %}
                     </tbody>
@@ -45,5 +45,6 @@ Storico Ordini
     {% else %}
         <p class="text-center">Non hai ordini precedenti.</p>
     {% endif %}
+    <td><a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a></td>
 </div>
 {% endblock %}
