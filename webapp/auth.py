@@ -550,3 +550,12 @@ def storico_ordini():
     )
 
     return render_template('storico.html', ordini=ordini, utente = current_user)
+
+
+@auth.route('/oggetti_venduti', methods=['GET', 'POST'])
+@login_required
+def oggetti_venduti():
+
+    prodotti = Prodotti.query.filter_by(idu=current_user.idutente).all()
+    
+    return render_template('oggetti_venduti.html', utente=current_user, prodotti = prodotti)
