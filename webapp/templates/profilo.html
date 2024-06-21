@@ -7,21 +7,44 @@ Profilo Utente
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h2 class="text-center">Profilo Utente</h2>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Nome:</strong> {{ utente.nome }}</li>
-                        <li class="list-group-item"><strong>Cognome:</strong> {{ utente.cognome }}</li>
-                        <li class="list-group-item"><strong>Username:</strong> {{ utente.username }}</li>
-                        <li class="list-group-item"><strong>Email:</strong> {{ utente.email }}</li>
-                    </ul>
+                    <div class="row">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Nome:</strong> {{ utente.nome }}</li>
+                            <li class="list-group-item"><strong>Cognome:</strong> {{ utente.cognome }}</li>
+                            <li class="list-group-item"><strong>Username:</strong> {{ utente.username }}</li>
+                            <li class="list-group-item"><strong>Email:</strong> {{ utente.email }}</li>
+                            <li class="list-group-item"></li>
+                        </ul>
+                    </div>
                     <div class="mt-3 text-center">
                         <a href="{{ url_for('auth.aggiungi_indirizzo') }}" class="btn btn-success">Aggiungi indirizzo</a>
                         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ml-2">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Dati Indirizzo</h2>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Via:</strong> {{ utente.indirizzo_ass.via }}</li>
+                            <li class="list-group-item"><strong>Numero:</strong> {{ utente.indirizzo_ass.numero }}</li>
+                            <li class="list-group-item"><strong>Città:</strong> {{ utente.indirizzo_ass.città }}</li>
+                            <li class="list-group-item"></li>
+                        </ul>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <a href="{{ url_for('auth.storico_ordini') }}" class="btn btn-success">Cronologia Ordini</a>
                         <a href="{{ url_for('views.home') }}" class="btn btn-secondary ml-2">Torna alla Home</a>
                     </div>
                 </div>
