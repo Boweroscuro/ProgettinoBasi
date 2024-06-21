@@ -29,7 +29,8 @@ class Utenti(db.Model, UserMixin):
     def get_id(self):
         return self.idutente
     
-    indirizzo_ass = db.relationship('Indirizzi', secondary = UtentiIndirizzi, backref=db.backref('utente_ass'))
+    indirizzi_ass = db.relationship('Indirizzi', secondary=UtentiIndirizzi, back_populates='utenti_ass')
+    #indirizzo_ass = db.relationship('Indirizzi', secondary = UtentiIndirizzi, backref=db.backref('utente_ass'))
     prodotto_carrello = db.relationship('CarrelloProdotto', backref='utente')
 
 
@@ -42,6 +43,8 @@ class Indirizzi(db.Model):
     cap = db.Column(db.Integer, nullable= False)
     città = db.Column(db.Text, nullable = False)
     isdefault = db.Column(db.Boolean, nullable = False)
+
+    utenti_ass = db.relationship('Utenti', secondary=UtentiIndirizzi, back_populates='indirizzi_ass')
 
 
 class Categorie(db.Model):

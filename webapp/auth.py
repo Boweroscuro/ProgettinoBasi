@@ -113,7 +113,9 @@ def aggiungi_indirizzo():
 @login_required  
 def user_profile():
     
-    return render_template('profilo.html', utente = current_user)
+    indirizzo =  next((indirizzo for indirizzo in current_user.indirizzi_ass if indirizzo.isdefault), None)
+
+    return render_template('profilo.html', utente = current_user, indirizzo = indirizzo)
 
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
