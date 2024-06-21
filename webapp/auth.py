@@ -474,13 +474,18 @@ def completamento_ordine(idordine):
     
     ordine = Ordini.query.get_or_404(idordine)
 
-    carrello_prodotti = CarrelloProdotto.query.filter_by(idcp=ordine.idcp).all()
+    carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
+
+    print(f"Trovati {len(carrello_prodotti)} prodotti nel carrello per l'ordine {ordine.idordine}")
+
 
     # Itera attraverso gli elementi del carrello e crea un record nello storico per ciascun prodotto
     for item in carrello_prodotti:
+        print(f"Processing item: {item.prodotto.nome}, Quantity: {item.quantità}, Cost: {item.prodotto.costo}")
+        print(item.idp)
         storico = Storici(
             idor=ordine.idordine,
-            idpr=item.idp,
+            idpr=item.prodotto.idprodotto,
             idu=current_user.idutente,
             qta=item.quantità,
             pagato=item.prodotto.costo  # Calcola il totale pagato per questo prodotto
@@ -509,5 +514,9 @@ def completamento_ordine(idordine):
 @auth.route('/storico', methods=['GET'])
 @login_required
 def storico_ordini():
-    ordini = Storici.query.filter_by(idu=current_user.idutente).all()
+    ordini = (
+        Storici.query
+        .filter_by(idu=current_user.idutente)
+        .all()
+    )
     return render_template('storico.html', ordini=ordini, utente = current_user)

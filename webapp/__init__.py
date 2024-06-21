@@ -11,8 +11,8 @@ def create_app():
     username = 'fra'
     password = 'fra'
     database = 'ecommerce'
-    #indirizzo = 'localhost'
-    indirizzo = '100.96.1.2'
+    indirizzo = 'localhost'
+    #indirizzo = '100.96.1.2'
     port = '5432'
 
     app.config['SECRET_KEY'] = 'charizardteracrystal'

@@ -65,6 +65,7 @@ class Prodotti(db.Model):
 
     idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'))
     idc = db.Column(db.Integer, db.ForeignKey('categorie.idcategoria'))
+    #storici = db.relationship('Storici', backref='prodotto')
 
 
 class Ordini(db.Model):
@@ -104,4 +105,5 @@ class Storici(db.Model):
     qta = db.Column(db.Integer, nullable=False, default=1)
     pagato = db.Column(db.Integer, nullable=False)
 
-    prodotto = db.relationship('Prodotti', backref='storico_prodotti')
+    prodotto = db.relationship('Prodotti', backref='storici')
+    ordine = db.relationship('Ordini', backref='storici', foreign_keys=[idor])

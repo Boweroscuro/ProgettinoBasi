@@ -8,40 +8,42 @@ Storico Ordini
 <div class="container mt-4">
     <h2 class="text-center mb-4">Storico Ordini</h2>
     {% if ordini %}
-        <div class="row">
-            <div class="col-md-12">
+        {% set current_order_id = None %}
+        {% for ordine in ordini %}
+            {% if current_order_id != ordine.idor %}
+                <!-- Intestazione per nuovo ordine -->
+                {% if current_order_id is not none %}
+                    </tbody>
+                    </table>
+                {% endif %}
+                {% set current_order_id = ordine.idor %}
+                <h4>Ordine ID: {{ ordine.idor }}</h4>
                 <table class="table table-sm">
                     <thead>
                         <tr>
                             <th>Sr</th>
-                            <th>ID Ordine</th>
-                            <th>Data</th>
-                            <th>Prodotti</th>
-                            <th>Quantità Totale</th>
-                            <th>Totale Pagato</th>
+                            <th>Prodotto</th>
+                            <th>Quantità</th>
+                            <th>Pagato</th>
                             <th>Stato</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for ordine in ordini %}
+            {% endif %}
                         <tr>
                             <td>{{ loop.index }}</td>
-                            <td>{{ ordine.idor }}</td>
-                            <td>
-                                <ul>
-                                    {{ ordine.nome }}
-                                </ul>
-                            </td>
+                            <td>{{ ordine.prodotto.nome }}</td>
                             <td>{{ ordine.qta }}</td>
                             <td>${{ "%.2f"|format(ordine.pagato) }}</td>
+                            <td>{{ ordine.stato }}</td>
                         </tr>
-                        {% endfor %}
+            {% if loop.last  %}
                     </tbody>
                 </table>
-            </div>
-        </div>
+            {% endif %}
+        {% endfor %}
     {% else %}
         <p class="text-center">Non hai ordini precedenti.</p>
     {% endif %}
 </div>
-{% endblock content %}
+{% endblock %}
