@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+Prodotti in vendita
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 align="center">Prodotti Venduti</h2>
+    <ul class="list-group">
+        {% for prodotto in prodotti %}
+        <div class="row hover-pointer" style="border: 1px solid #e0e0e0;background-color:white ;border-radius: 5px; margin-bottom: 10px; padding: 10px;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">    
+            <div class="col-md-8">
+                <h4>{{ prodotto.nome }}</h4>
+                <p>{{ prodotto.descrizione }}</p>
+            </div>
+            <div class="col-md-4 text-right" > 
+                <!--<a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>-->
+            <p></p>
+            <form id="elimina-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.eliminaprodotto', idprodotto=prodotto.idprodotto) }}" method="post">
+                <button type="button" class="btn btn-danger elimina-btn" data-prodotto="{{ prodotto.idprodotto }}">Elimina</button>
+            </form>
+            </div>
+        </div>
+        {% endfor %}
+        <script>
+            document.querySelectorAll('.elimina-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const prodottoId = this.getAttribute('data-prodotto');
+                    if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
+                        document.getElementById(`elimina-form-${prodottoId}`).submit();
+                    }
+                });
+            });
+        </script>
+    </ul>
+    <div align="center">
+        <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+    </div>
+</div>
+{% endblock %}

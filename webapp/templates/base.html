@@ -15,7 +15,7 @@
     <title>{% block title %}Home{% endblock %}</title>
     <style>
             body {
-              background-color: #f5f5dc; 
+              background-color: #f5f5dc;
             }
           .switch {
               position: relative;
@@ -68,7 +68,7 @@
             transform: translateX(26px);
           }
           
-          /* Rounded sliders */
+          
           .slider.round {
             border-radius: 34px;
           }
@@ -98,7 +98,7 @@
           }
 
           .card-border {
-            border: 0.5px solid black;  /* Aggiunge un bordo nero */
+            border: 0.5px solid black;  
           }
           
          
@@ -128,6 +128,7 @@
                 <a class="nav-item nav-link" id="home" href="/">Home</a>
                   {% if (utente.privilegi) %}
                   <a class="nav-item nav-link" id="Prodottiv" href="/hvenditori">Oggetti in vendita</a>
+                  <a class="nav-item nav-link" id="oggetti_venduti" href="/oggetti_venduti">Oggetti venduti</a>
                   {% endif %}
                   {% if (utente.isadmin) %}
                   <a class="nav-item nav-link" id="aggcategoria" href="/aggcategoria">Categorie</a>
