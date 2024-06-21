@@ -5,46 +5,60 @@ Homepage
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
     <h2 align="center">Prodotti</h2>
     {% if categorie_figlie %}
     <h3>Sottocategorie:</h3>
-    {% for sottocategoria in categorie_figlie %}
-        {% if loop.index0 % 3 == 0 %}
-            <div class="row">
-        {% endif %}
+    <div class="row">
+        {% for sottocategoria in categorie_figlie %}
         <div class="col-md-4 mb-4">
-            <div class="card card-border h-100 text-center hover-pointer" onclick=window.location.href="{{url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}"> 
+            <div class="card card-border h-100 text-center hover-pointer" onclick="window.location.href='{{url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}'"> 
                 <img src="{{ url_for('auth.get_immagine_cat', idcategoria=sottocategoria.idcategoria) }}" class="card-img-top" alt="{{ sottocategoria.nome }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ sottocategoria.nome }}</h5>
                 </div>
             </div>
         </div>
-        {% if loop.index % 3 == 0 or loop.last %}
-            </div>
+        {% if loop.index % 3 == 0 %}
+        </div><div class="row">
         {% endif %}
-    {% endfor %}
+        {% endfor %}
+    </div>
     {% endif %}
+    
     <form action="{{ url_for('auth.homeprodot', idcategoria=idcategoria) }}" method="GET" class="mb-4">
         <div class="form-row align-items-center">
             <div class="col-auto">
-                <label class="sr-only" for="search">Cerca per nome prodotto</label>
-                <input type="text" class="form-control mb-2" id="search" name="search" placeholder="Cerca per nome prodotto">
+                <input type="text" class="form-control mb-2" name="search" placeholder="Cerca per nome prodotto" value="{{ request.args.get('search', '') }}">
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-outline-primary mb-2">Cerca</button>
+                <input type="number" class="form-control mb-2" name="min_cost" placeholder="Costo minimo" value="{{ request.args.get('min_cost', '') }}">
             </div>
             <div class="col-auto">
-                <button type="reset" class="btn btn-outline-danger mb-2" onclick="this.form.reset();this.form.submit();">X</button>
+                <input type="number" class="form-control mb-2" name="max_cost" placeholder="Costo massimo" value="{{ request.args.get('max_cost', '') }}">
+            </div>
+            <div class="col-auto">
+                <select class="form-control mb-2" name="sort_by">
+                    <option value="">Ordina per</option>
+                    <option value="nome_asc" {% if request.args.get('sort_by') == 'nome_asc' %}selected{% endif %}>Nome (A-Z)</option>
+                    <option value="nome_desc" {% if request.args.get('sort_by') == 'nome_desc' %}selected{% endif %}>Nome (Z-A)</option>
+                    <option value="costo_asc" {% if request.args.get('sort_by') == 'costo_asc' %}selected{% endif %}>Costo (Crescente)</option>
+                    <option value="costo_desc" {% if request.args.get('sort_by') == 'costo_desc' %}selected{% endif %}>Costo (Decrescente)</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary mb-2">Filtra</button>
+            </div>
+            <div class="col-auto">
+                <button type="reset" class="btn btn-outline-danger mb-2" onclick="this.form.reset();this.form.submit();">Reset</button>
             </div>
         </div>
     </form>
+
     <div class="row">
-    {% for prodotto in prodotti %}
+        {% for prodotto in prodotti %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100 hover-pointer" style="width: 100%;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
+            <div class="card h-100 hover-pointer" style="width: 100%;" onclick="window.location.href='{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}'">
                 <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Immagine prodotto">
                 <div class="card-body">
                     <h5 class="card-title">{{ prodotto.nome }}</h5>
@@ -56,10 +70,10 @@ Homepage
             </div>
         </div>
         {% if loop.index % 3 == 0 %}
-            </div><div class="row">
+        </div><div class="row">
         {% endif %}
-    {% endfor %}
+        {% endfor %}
     </div>
-    <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+    <a href="{{ request.referrer or url_for('views.home') }}" class="btn btn-success">Indietro</a>
 </div>
 {% endblock %}
