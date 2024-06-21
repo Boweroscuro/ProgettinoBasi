@@ -1,5 +1,5 @@
 from io import BytesIO
-from flask import Blueprint, jsonify, render_template, request, flash, redirect, send_file, url_for
+from flask import Blueprint, jsonify, render_template, request, flash, redirect, send_file, url_for, request
 from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -147,7 +147,7 @@ def prodotto(idprodotto):
 
     prodotto = Prodotti.query.get_or_404(idprodotto)
     
-    return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
+    return render_template('prodotto.html', utente = current_user, prodotto = prodotto, request = request)
 
 
 @auth.route('/aggcarrello/<int:idprodotto>', methods=['GET', 'POST'])
@@ -264,7 +264,7 @@ def homeprodot(idcategoria):
     #da qui
     search = request.args.get('search')
     selected_categoria = request.args.get('categoria')
-
+    """
     prodotti_query = Prodotti.query.filter(Prodotti.idc.in_(categorie_ids))
 
     if search:
@@ -283,8 +283,40 @@ def homeprodot(idcategoria):
     # Nessuna ricerca specificata, mostra tutti i prodotti
     categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
     
-    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, categorie = categorie, idcategoria = idcategoria, categorie_figlie=categorie_figlie)
+    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, categorie = categorie, idcategoria = idcategoria, categorie_figlie=categorie_figlie, request = request)
+    """
+    sort_by = request.args.get('sort_by')
+    min_cost = request.args.get('min_cost')
+    max_cost = request.args.get('max_cost')
 
+    prodotti_query = Prodotti.query.filter(Prodotti.idc.in_(categorie_ids))
+
+    if search:
+        prodotti_query = prodotti_query.filter(Prodotti.nome.ilike(f'%{search}%'))
+
+    if selected_categoria:
+        sottocategorie_ids = get_all_subcategories(selected_categoria)
+        sottocategorie_ids.append(selected_categoria)  # Aggiungi anche la categoria selezionata stessa
+        prodotti_query = prodotti_query.filter(Prodotti.idc.in_(sottocategorie_ids))
+
+    if min_cost:
+        prodotti_query = prodotti_query.filter(Prodotti.costo >= min_cost)
+
+    if max_cost:
+        prodotti_query = prodotti_query.filter(Prodotti.costo <= max_cost)
+
+    if sort_by:
+        if sort_by == 'nome':
+            prodotti_query = prodotti_query.order_by(Prodotti.nome.asc())
+        elif sort_by == 'costo':
+            prodotti_query = prodotti_query.order_by(Prodotti.costo.asc())
+    
+    prodotti = prodotti_query.all()
+
+    categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
+
+    return render_template("homeprodot.html", utente=current_user, prodotti=prodotti, categorie=categorie, idcategoria=idcategoria, categorie_figlie=categorie_figlie, request=request)
+    
 def get_all_subcategories(categoria_id):
     """ Ottieni tutti gli ID delle sottocategorie nidificate sotto la categoria specificata """
     sottocategorie_ids = []
