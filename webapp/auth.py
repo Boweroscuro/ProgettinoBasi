@@ -13,7 +13,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        utente = Utenti.query.filter_by(username = username).first() #per fare query semplici
+        utente = Utenti.query.filter_by(username = username).first() 
         if utente:
             if check_password_hash(utente.password_hash, password):
                 flash('Utente autenticato!', category = 'success')
@@ -112,6 +112,7 @@ def aggiungi_indirizzo():
 @auth.route('/profilo')
 @login_required  
 def user_profile():
+    
     return render_template('profilo.html', utente = current_user)
 
 @auth.route('/hvenditori', methods=['GET', 'POST'])
