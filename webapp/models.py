@@ -106,6 +106,8 @@ class Storici(db.Model):
     idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'), nullable = False)
     qta = db.Column(db.Integer, nullable=False, default=1)
     pagato = db.Column(db.Integer, nullable=False)
+    consegna = db.Column(db.Boolean, nullable = False)
+
 
     prodotto = db.relationship('Prodotti', backref='storici')
     ordine = db.relationship('Ordini', backref='storici', foreign_keys=[idor])

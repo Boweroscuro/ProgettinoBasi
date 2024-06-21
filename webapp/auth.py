@@ -517,7 +517,8 @@ def completamento_ordine(idordine):
             idpr=item.prodotto.idprodotto,
             idu=current_user.idutente,
             qta=item.quantità,
-            pagato=item.prodotto.costo  # Calcola il totale pagato per questo prodotto
+            pagato=item.prodotto.costo,  # Calcola il totale pagato per questo prodotto
+            consegnato = False
         )
 
         db.session.add(storico)
@@ -556,6 +557,8 @@ def storico_ordini():
 @login_required
 def oggetti_venduti():
 
+
     prodotti = Prodotti.query.filter_by(idu=current_user.idutente).all()
+    
     
     return render_template('oggetti_venduti.html', utente=current_user, prodotti = prodotti)
