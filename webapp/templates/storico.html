@@ -23,6 +23,7 @@ Storico Ordini
                         <tr>
                             <th class="col-stato">ID Ordine</th>
                             <th class="col-prodotto">Prodotto</th>
+                            <th class="col-stato">Data</th>
                             <th class="col-stato">Quantità</th>
                             <th class="col-stato">Pagato</th>
                             <th class="col-stato">Stato</th>
@@ -33,6 +34,7 @@ Storico Ordini
                         <tr>
                             <td class="col-stato">{{ ordine.idor }}</td>
                             <td class="col-prodotto">{{ ordine.prodotto.nome }}</td>
+                            <td class="col-stato">{{ ordine.dataordine }}</td>
                             <td class="col-stato">{{ ordine.qta }}</td>
                             <td class="col-stato">${{ "%.2f"|format(ordine.pagato) }}</td>
                             <td class="col-stato">Completato</td>
@@ -45,6 +47,6 @@ Storico Ordini
     {% else %}
         <p class="text-center">Non hai ordini precedenti.</p>
     {% endif %}
-    <td><a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a></td>
+    <td><a href="{{ url_for('auth.user_profile') }}" class="btn btn-success">Indietro</a></td>
 </div>
 {% endblock %}
