@@ -149,6 +149,7 @@ def prodotto(idprodotto):
     
     return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
 
+
 @auth.route('/aggcarrello/<int:idprodotto>', methods=['GET', 'POST'])
 @login_required
 def aggcarrello(idprodotto):
@@ -173,7 +174,6 @@ def aggcarrello(idprodotto):
 
     db.session.commit()
     return redirect(url_for('auth.prodotto', idprodotto=idprodotto))
-    #return render_template('prodotto.html', utente = current_user, prodotto = prodotto)
 
 
 @auth.route('/aggprodotto', methods=['GET', 'POST'])
@@ -402,12 +402,10 @@ def deleteordine(idordine):
     return redirect(url_for('auth.carrello', idordine=ordine.idordine))
 
 
-
-
-
 @auth.route('/checkout')
 @login_required
 def checkout():
+
     # Recupera il carrello dell'utente corrente (presumibilmente già autenticato)
     carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).first()
 
@@ -515,9 +513,11 @@ def completamento_ordine(idordine):
 @auth.route('/storico', methods=['GET'])
 @login_required
 def storico_ordini():
+
     ordini = (
         Storici.query
         .filter_by(idu=current_user.idutente)
         .all()
     )
+
     return render_template('storico.html', ordini=ordini, utente = current_user)
