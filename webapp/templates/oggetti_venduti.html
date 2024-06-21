@@ -1,38 +1,30 @@
 {% extends "base.html" %}
 
 {% block title %}
-Prodotti in vendita
+Oggetti Venduti
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 align="center">Prodotti Venduti</h2>
-    <ul class="list-group">
-        {% for prodotto in prodotti %}
-        <div class="row hover-pointer" style="border: 1px solid #e0e0e0;background-color:white ;border-radius: 5px; margin-bottom: 10px; padding: 10px;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">    
-            <div class="col-md-8">
-                <h4>{{ prodotto.nome }}</h4>
-                <p>{{ prodotto.descrizione }}</p>
-            </div>
-            <div class="col-md-4 text-right" > 
-                <!--<a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>-->
-            <p></p>
-            </div>
+<div class="container mt-4">
+    <h2 class="text-center">Oggetti Venduti</h2>
+    {% for ordine, prodotti in ordini_e_prodotti %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4>Ordine #{{ ordine.idordine }}</h4>
+            <p>Data: {{ ordine.dataordine }}</p>
         </div>
-        {% endfor %}
-        <script>
-            document.querySelectorAll('.elimina-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const prodottoId = this.getAttribute('data-prodotto');
-                    if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-                        document.getElementById(`elimina-form-${prodottoId}`).submit();
-                    }
-                });
-            });
-        </script>
-    </ul>
-    <div align="center">
-        <a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a>
+        <div class="card-body">
+            <ul class="list-group">
+                {% for prodotto in prodotti %}
+                <li class="list-group-item">
+                    <h5>{{ prodotto.nome }}</h5>
+                    <p>Quantità: {{ prodotto.storici.filter_by(idor=ordine.idordine).first().qta }}</p>
+                    <p>Pagato: {{ prodotto.storici.filter_by(idor=ordine.idordine).first().pagato }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
+    {% endfor %}
 </div>
 {% endblock %}

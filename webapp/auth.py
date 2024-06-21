@@ -557,8 +557,13 @@ def storico_ordini():
 @login_required
 def oggetti_venduti():
 
+    ordini = Ordini.query.filter_by(idu=current_user.idutente).all()
 
-    prodotti = Prodotti.query.filter_by(idu=current_user.idutente).all()
-    
-    
-    return render_template('oggetti_venduti.html', utente=current_user, prodotti = prodotti)
+    # Lista di tuple (ordine, prodotti venduti in quell'ordine)
+    ordini_e_prodotti = []
+    for ordine in ordini:
+        prodotti_ordine = Prodotti.query.join(Storici, Prodotti.idprodotto == Storici.idpr)\
+                                        .filter(Storici.idor == ordine.idordine).all()
+        ordini_e_prodotti.append((ordine, prodotti_ordine))
+
+    return render_template('oggetti_venduti.html', utente=current_user, ordini_e_prodotti=ordini_e_prodotti)

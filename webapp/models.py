@@ -80,6 +80,7 @@ class Ordini(db.Model):
     completato = db.Column(db.Boolean, nullable = False)
 
     idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
+    
 
 class Recensioni(db.Model):
     __tablename__ = 'recensioni'
