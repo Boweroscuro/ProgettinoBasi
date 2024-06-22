@@ -12,11 +12,17 @@ Oggetti Venduti
         <div class="card-header">
             <h3>Ordine ID: {{ ordine.idordine }}</h3>
             <ul>
-            {% for prodotto in prodotti %}
+            {% for prodotto, consegna in prodotti %}
             <li class="list-group-item">
                 <p>{{ prodotto.nome }} - {{ prodotto.costo }} €</p>
-                <a href="{{ url_for('auth.user_profile') }}" class="btn btn-success">Consegna</a>
-                <a href="{{ url_for('auth.user_profile') }}" class="btn btn-danger">Annulla</a>
+                {% if not consegna %}
+                <form action="{{ url_for('auth.consegna_prodotto', ordine_id=ordine.idordine, prodotto_id=prodotto.idprodotto) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-success">Consegna</button>
+                </form>
+                <form action="{{ url_for('auth.annulla_prodotto', ordine_id=ordine.idordine, prodotto_id=prodotto.idprodotto) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Annulla</button>
+                </form>
+                {% endif %}
             </li>
             
             {% endfor %}

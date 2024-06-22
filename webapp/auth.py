@@ -507,8 +507,6 @@ def completamento_ordine(idordine):
 
     print(f"Trovati {len(carrello_prodotti)} prodotti nel carrello per l'ordine {ordine.idordine}")
 
-
-    
     for item in carrello_prodotti:
         print(f"Processing item: {item.prodotto.nome}, Quantity: {item.quantità}, Cost: {item.prodotto.costo}")
         print(item.idp)
@@ -522,7 +520,6 @@ def completamento_ordine(idordine):
         )
 
         db.session.add(storico)
-
     
         prodotto = Prodotti.query.get(item.idp)
         if prodotto:
@@ -555,33 +552,57 @@ def storico_ordini():
 @auth.route('/oggetti_venduti', methods=['GET', 'POST'])
 @login_required
 def oggetti_venduti():
-    
+    # Recupera tutti i prodotti dell'utente corrente
     prodotti_utente = Prodotti.query.filter_by(idu=current_user.idutente).all()
     
-    
+    # Dizionario per mappare ogni ordine ai suoi prodotti venduti
     ordini_e_prodotti = {}
 
-    
+    # Trovare tutti gli storici che contengono i prodotti dell'utente
     for prodotto in prodotti_utente:
         storici_prodotto = Storici.query.filter_by(idpr=prodotto.idprodotto).all()
         for storico in storici_prodotto:
             ordine_id = storico.idor
-     
+            # Se l'ordine è già nel dizionario, aggiungi il prodotto alla lista dei prodotti di quell'ordine
             if ordine_id in ordini_e_prodotti:
-                ordini_e_prodotti[ordine_id][1].append(prodotto)
+                ordini_e_prodotti[ordine_id][1].append((prodotto, storico.consegna))
             else:
-     
+                # Recupera l'ordine completo
                 ordine_completo = Ordini.query.get(ordine_id)
-     
-                ordini_e_prodotti[ordine_id] = (ordine_completo, [prodotto])
+                # Aggiungi una nuova chiave (ordine) con una lista contenente il prodotto
+                ordini_e_prodotti[ordine_id] = (ordine_completo, [(prodotto, storico.consegna)])
 
-    
+    # Converte il dizionario in una lista di tuple per facilitarne l'iterazione nel template
     ordini_e_prodotti_lista = list(ordini_e_prodotti.values())
 
-    
+    # Rende il template 'oggetti_venduti.html' con le informazioni necessarie
     return render_template('oggetti_venduti.html', utente=current_user, ordini_e_prodotti=ordini_e_prodotti_lista)
 
-@auth.route('/spedisci')
+
+
+
+@auth.route('/consegna_prodotto/<int:ordine_id>/<int:prodotto_id>', methods=['POST'])
 @login_required
-def spedisci():
-    pass
+def consegna_prodotto(ordine_id, prodotto_id):
+    storico = Storici.query.filter_by(idor=ordine_id, idpr=prodotto_id).first()
+    if storico:
+        storico.consegna = True
+        db.session.commit()
+        flash('Prodotto consegnato con successo!', 'success')
+    else:
+        flash('Prodotto non trovato.', 'danger')
+    return redirect(url_for('auth.oggetti_venduti'))
+
+@auth.route('/annulla_prodotto/<int:ordine_id>/<int:prodotto_id>', methods=['POST'])
+@login_required
+def annulla_prodotto(ordine_id, prodotto_id):
+    storico = Storici.query.filter_by(idor=ordine_id, idpr=prodotto_id).first()
+    if storico:
+        prodotto = Prodotti.query.filter_by(idprodotto=prodotto_id).first()
+        prodotto.quantità += storico.qta
+        db.session.delete(storico)
+        db.session.commit()
+        flash('Prodotto annullato con successo!', 'success')
+    else:
+        flash('Prodotto non trovato.', 'danger')
+    return redirect(url_for('auth.oggetti_venduti'))
