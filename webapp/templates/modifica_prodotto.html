@@ -7,22 +7,32 @@ Modifica Prodotto
 {% block content %}
 <div class="container">
     <h2 align="center">Modifica Prodotto</h2>
-    <form method="POST" action="{{ url_for('auth.modifica_prodotto', idprodotto=prodotto.idprodotto) }}">
+    <form method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome">Nome</label>
             <input type="text" class="form-control" id="nome" name="nome" value="{{ prodotto.nome }}" required>
+        </div>
+        <div class="form-group">
+            <label for="costo">Costo</label>
+            <input type="number" step="0.01" class="form-control" id="costo" name="costo" value="{{ prodotto.costo }}" required>
+        </div>
+        <div class="form-group">
+            <label for="quantità">Quantità</label>
+            <input type="number" class="form-control" id="quantità" name="quantità" value="{{ prodotto.quantità }}" required>
         </div>
         <div class="form-group">
             <label for="descrizione">Descrizione</label>
             <textarea class="form-control" id="descrizione" name="descrizione" required>{{ prodotto.descrizione }}</textarea>
         </div>
         <div class="form-group">
-            <label for="prezzo">Prezzo</label>
-            <input type="number" step="0.01" class="form-control" id="prezzo" name="prezzo" value="{{ prodotto.costo }}" required>
+            <label for="marca">Marca</label>
+            <input type="text" class="form-control" id="marca" name="marca" value="{{ prodotto.marca }}" required>
         </div>
-        <!-- Add other fields as necessary -->
-        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
-        <a href="{{ url_for('auth.prodotti_in_vendita') }}" class="btn btn-secondary">Annulla</a>
+        <div class="form-group">
+            <label for="immagine">Immagine (Lascia vuoto per mantenere l'attuale)</label>
+            <input type="file" class="form-control-file" id="immagine" name="immagine">
+        </div>
+        <button type="submit" class="btn btn-primary">Aggiorna Prodotto</button>
     </form>
 </div>
 {% endblock %}
