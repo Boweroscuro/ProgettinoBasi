@@ -12,21 +12,21 @@ Prodotti in vendita
         <div class="row hover-pointer" style="border: 1px solid #e0e0e0;background-color:white ;border-radius: 5px; margin-bottom: 10px; padding: 10px;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">    
             <div class="col-md-8">
                 <h4>{{ prodotto.nome }}</h4>
-                <p>{{ prodotto.descrizione }}</p>
+                <p>Quantità: {{ prodotto.quantità }}</p>
+                <p>Costo: {{ prodotto.costo }}</p>
             </div>
-            <div class="col-md-4 text-right" > 
-                <!--<a href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-secondary">Visualizza</a>-->
-            <p></p>
-            <form id="elimina-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.eliminaprodotto', idprodotto=prodotto.idprodotto) }}" method="post">
-                <button type="button" class="btn btn-danger elimina-btn" data-prodotto="{{ prodotto.idprodotto }}">Elimina</button>
+            <div class="col-md-4 text-right"> 
+                <form id="elimina-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.eliminaprodotto', idprodotto=prodotto.idprodotto) }}" method="post" style="display: inline;">
+                    <button type="button" class="btn btn-danger elimina-btn" data-prodotto="{{ prodotto.idprodotto }}">Elimina</button>
+                </form>
                 <a href="{{ url_for('auth.modifica_prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-primary">Modifica</a>
-            </form>
             </div>
         </div>
         {% endfor %}
         <script>
             document.querySelectorAll('.elimina-btn').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
                     const prodottoId = this.getAttribute('data-prodotto');
                     if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
                         document.getElementById(`elimina-form-${prodottoId}`).submit();

@@ -12,7 +12,7 @@ Homepage
     <div class="row">
         {% for sottocategoria in categorie_figlie %}
         <div class="col-md-4 mb-4">
-            <div class="card card-border h-100 text-center hover-pointer" onclick="window.location.href='{{url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}'"> 
+            <div class="card card-border h-100 text-center hover-pointer" onclick=window.location.href="{{url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}"> 
                 <img src="{{ url_for('auth.get_immagine_cat', idcategoria=sottocategoria.idcategoria) }}" class="card-img-top" alt="{{ sottocategoria.nome }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ sottocategoria.nome }}</h5>
@@ -58,7 +58,7 @@ Homepage
     <div class="row">
         {% for prodotto in prodotti %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100 hover-pointer" style="width: 100%;" onclick="window.location.href='{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}'">
+            <div class="card h-100 hover-pointer" style="width: 100%;" onclick=window.location.href="{{ url_for('auth.prodotto', idprodotto=prodotto.idprodotto) }}">
                 <img src="{{ url_for('auth.get_immagine', idprodotto=prodotto.idprodotto) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Immagine prodotto">
                 <div class="card-body">
                     <h5 class="card-title">{{ prodotto.nome }}</h5>
