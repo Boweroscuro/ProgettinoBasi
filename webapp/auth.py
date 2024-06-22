@@ -157,7 +157,7 @@ def prodotto(idprodotto):
 def aggcarrello(idprodotto):
     prodotto = Prodotti.query.get_or_404(idprodotto)
 
-    # Controlla se il prodotto è già nel carrello dell'utente
+    
     carrello_prodotto = CarrelloProdotto.query.filter_by(idu=current_user.idutente, idp=idprodotto).first()
 
     if prodotto.quantità <= 0:
@@ -165,11 +165,11 @@ def aggcarrello(idprodotto):
         return redirect(url_for('auth.prodotto', idprodotto=idprodotto))
  
     if carrello_prodotto:
-        # Se il prodotto è già nel carrello, incrementa la quantità
+        
         carrello_prodotto.quantità += 1
         flash(f'Quantità di "{prodotto.nome}" nel carrello: {carrello_prodotto.quantità}', 'success')
     else:
-        # Se il prodotto non è nel carrello, aggiungilo con quantità 1
+        
         carrello_prodotto = CarrelloProdotto(idu=current_user.idutente, idp=idprodotto, quantità=1)
         db.session.add(carrello_prodotto)
         flash(f'Prodotto "{prodotto.nome}" aggiunto al carrello!', 'success')
@@ -218,7 +218,7 @@ def aggprodotto():
             error = True
 
         if not error:
-            # Aggiungere il prodotto solo se non ci sono errori
+            
             prodotto = Prodotti(
                 immagine=immagine.read(), 
                 nome=nome, 
@@ -250,20 +250,20 @@ def get_sottocategorie():
 @login_required
 def homeprodot(idcategoria):
 
-    categoria_padre = Categorie.query.filter_by(idcategoria=idcategoria).first()  # Ottieni la categoria corrente
+    categoria_padre = Categorie.query.filter_by(idcategoria=idcategoria).first() 
 
     categorie_ids = [idcategoria]
     
-    if categoria_padre.idgenitore is None:  # Se la categoria non ha un genitore, è una categoria principale
+    if categoria_padre.idgenitore is None: 
         categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
         prodotti = Prodotti.query.filter(Prodotti.idc.in_([c.idcategoria for c in categorie_figlie])).all()
         categorie_ids.extend([c.idcategoria for c in categorie_figlie])
         
-    else:  # Se la categoria ha un genitore, è una sottocategoria
-        prodotti = Prodotti.query.filter(Prodotti.idc == idcategoria).all()  # Mostra solo i prodotti della sottocategoria
+    else: 
+        prodotti = Prodotti.query.filter(Prodotti.idc == idcategoria).all()  
         categorie_figlie = Categorie.query.filter_by(idgenitore=idcategoria).all()
     
-    #da qui
+    
     search = request.args.get('search')
     selected_categoria = request.args.get('categoria')
     """
@@ -298,7 +298,7 @@ def homeprodot(idcategoria):
 
     if selected_categoria:
         sottocategorie_ids = get_all_subcategories(selected_categoria)
-        sottocategorie_ids.append(selected_categoria)  # Aggiungi anche la categoria selezionata stessa
+        sottocategorie_ids.append(selected_categoria)  
         prodotti_query = prodotti_query.filter(Prodotti.idc.in_(sottocategorie_ids))
 
     if min_cost:
@@ -340,22 +340,22 @@ def aggcategoria():
     if request.method == 'POST':
         nome = request.form.get('nome')
         immagine = request.files['immagine']
-        idgenitore = request.form.get('idgenitore')  # Aggiunto per ottenere l'id del genitore dalla form
+        idgenitore = request.form.get('idgenitore') 
 
         if idgenitore == '':
             idgenitore = None
 
-        # Creiamo una nuova istanza di Categorie
+        
         nuova_categoria = Categorie(nome=nome, immagine=immagine.read(), idgenitore=idgenitore)
 
-        # Aggiungiamo la nuova categoria al database
+       
         db.session.add(nuova_categoria)
         db.session.commit()
 
         flash('Categoria aggiunta!', category='success')
         return redirect(url_for('auth.aggcategoria'))
     
-    # Ottieni tutte le categorie principali per visualizzarle nella form
+    
     categorie_principali = Categorie.query.all()
 
     return render_template('aggcategoria.html', utente=current_user, categorie_principali=categorie_principali)
@@ -369,7 +369,7 @@ def get_immagine_cat(idcategoria):
 def carrello():
     carrello_prodotti = db.session.query(CarrelloProdotto).filter_by(idu=current_user.idutente).all()
     subtotal = sum(item.prodotto.costo * item.quantità for item in carrello_prodotti)
-    tax = subtotal /10  # Supponiamo una tassa del 10%
+    tax = subtotal /10  
     grand_total = subtotal + tax
     return render_template('carrello.html',  utente=current_user, carrello_prodotti=carrello_prodotti, tax=tax, grand_total=grand_total)
 
@@ -426,7 +426,7 @@ def updateordine(idordine):
         flash('Errore durante l\'aggiornamento dello stato dell\'ordine', 'danger')
     return redirect(url_for('auth.controllo_ordini'))
 """
-# Delete Order
+
 @auth.route('/deleteordine/<int:idordine>', methods=['GET', 'POST'])
 def deleteordine(idordine):
     ordine = Ordini.query.get_or_404(idordine)
@@ -440,23 +440,23 @@ def deleteordine(idordine):
 @login_required
 def checkout():
 
-    # Recupera il carrello dell'utente corrente (presumibilmente già autenticato)
+   
     carrello = CarrelloProdotto.query.filter_by(idu=current_user.idutente).first()
 
     if not carrello:
         flash('Il carrello dell\'utente è vuoto.', 'error')
         return redirect(url_for('auth.carrello'))
 
-    # Crea un nuovo ordine utilizzando i dati del carrello
+  
     nuovo_ordine = Ordini( 
-        metodo_di_pagamento='metodo_scelto_dall_utente',  # Sostituire con il metodo effettivo
+        metodo_di_pagamento='metodo_scelto_dall_utente',  
         idcp = carrello.idcp,
         completato = False 
     )
 
 
     try:
-        # Aggiungi l'ordine al database
+        
         db.session.add(nuovo_ordine)
         db.session.commit()
         flash('Ordine creato con successo!', 'success')
@@ -470,7 +470,7 @@ def checkout():
     return redirect(url_for('auth.controllo_ordini', idordine = nuovo_ordine.idordine))
 
 
-# Controllo Ordini
+
 @auth.route('/controllo_ordini/<int:idordine>', methods=['GET', 'POST']) 
 @login_required
 def controllo_ordini(idordine): 
@@ -479,16 +479,16 @@ def controllo_ordini(idordine):
 
     indirizzo = next((indirizzo for indirizzo in current_user.indirizzi_ass if indirizzo.isdefault), None)
     
-    # Filtra gli ordini per l'utente corrente utilizzando il campo idu nel modello CarrelloProdotto
+    
     carrello_prodotti = CarrelloProdotto.query.filter_by(idu=current_user.idutente).all()
 
-    # Calcola la somma dei subtotali
+  
     subtotal = sum(item.prodotto.costo * item.quantità for item in carrello_prodotti)
 
-    # Calcola la tassa (supponiamo il 10%)
+    
     tax = subtotal / 10
 
-    # Calcola il totale comprensivo di tassa
+    
     grand_total = subtotal + tax
 
     totquantità = sum(item.quantità for item in carrello_prodotti) 
@@ -508,7 +508,7 @@ def completamento_ordine(idordine):
     print(f"Trovati {len(carrello_prodotti)} prodotti nel carrello per l'ordine {ordine.idordine}")
 
 
-    # Itera attraverso gli elementi del carrello e crea un record nello storico per ciascun prodotto
+    
     for item in carrello_prodotti:
         print(f"Processing item: {item.prodotto.nome}, Quantity: {item.quantità}, Cost: {item.prodotto.costo}")
         print(item.idp)
@@ -517,22 +517,21 @@ def completamento_ordine(idordine):
             idpr=item.prodotto.idprodotto,
             idu=current_user.idutente,
             qta=item.quantità,
-            pagato=item.prodotto.costo,  # Calcola il totale pagato per questo prodotto
+            pagato=item.prodotto.costo,  
             consegna = False
         )
 
         db.session.add(storico)
 
-        # Aggiorna la quantità disponibile del prodotto nel magazzino
+    
         prodotto = Prodotti.query.get(item.idp)
         if prodotto:
-            prodotto.quantità -= item.quantità  # Riduci la quantità disponibile
-            #db.session.add(prodotto) #non sono sicuro di questa
+            prodotto.quantità -= item.quantità  
+    
 
     ordine.idcp = None
-    CarrelloProdotto.query.filter_by(idu=current_user.idutente).delete() #modo poco elegante ma chissene frega
-
-    # Esegui il commit delle modifiche al database
+    CarrelloProdotto.query.filter_by(idu=current_user.idutente).delete() 
+    
     db.session.commit()
 
     flash("Ordine completato con successo!", "success")
@@ -556,30 +555,30 @@ def storico_ordini():
 @auth.route('/oggetti_venduti', methods=['GET', 'POST'])
 @login_required
 def oggetti_venduti():
-    # Recupera tutti i prodotti dell'utente corrente
+    
     prodotti_utente = Prodotti.query.filter_by(idu=current_user.idutente).all()
     
-    # Dizionario per mappare ogni ordine ai suoi prodotti venduti
+    
     ordini_e_prodotti = {}
 
-    # Trovare tutti gli storici che contengono i prodotti dell'utente
+    
     for prodotto in prodotti_utente:
         storici_prodotto = Storici.query.filter_by(idpr=prodotto.idprodotto).all()
         for storico in storici_prodotto:
             ordine_id = storico.idor
-            # Se l'ordine è già nel dizionario, aggiungi il prodotto alla lista dei prodotti di quell'ordine
+     
             if ordine_id in ordini_e_prodotti:
                 ordini_e_prodotti[ordine_id][1].append(prodotto)
             else:
-                # Recupera l'ordine completo
+     
                 ordine_completo = Ordini.query.get(ordine_id)
-                # Aggiungi una nuova chiave (ordine) con una lista contenente il prodotto
+     
                 ordini_e_prodotti[ordine_id] = (ordine_completo, [prodotto])
 
-    # Converte il dizionario in una lista di tuple per facilitarne l'iterazione nel template
+    
     ordini_e_prodotti_lista = list(ordini_e_prodotti.values())
 
-    # Rende il template 'oggetti_venduti.html' con le informazioni necessarie
+    
     return render_template('oggetti_venduti.html', utente=current_user, ordini_e_prodotti=ordini_e_prodotti_lista)
 
 @auth.route('/spedisci')
