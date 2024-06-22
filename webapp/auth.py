@@ -552,36 +552,6 @@ def storico_ordini():
 
     return render_template('storico.html', ordini=ordini, utente = current_user)
 
-"""
-@auth.route('/oggetti_venduti', methods=['GET', 'POST'])
-@login_required
-def oggetti_venduti():
-    # Recupera tutti i prodotti dell'utente corrente
-    prodotti_utente = Prodotti.query.filter_by(idu=current_user.idutente).all()
-    
-    # Dizionario per mappare ogni ordine ai suoi prodotti venduti
-    ordini_e_prodotti = {}
-
-    # Trovare tutti gli storici che contengono i prodotti dell'utente
-    for prodotto in prodotti_utente:
-        storici_prodotto = Storici.query.filter_by(idpr=prodotto.idprodotto).all()
-        for storico in storici_prodotto:
-            ordine_id = storico.idor
-            # Se l'ordine è già nel dizionario, aggiungi il prodotto alla lista dei prodotti di quell'ordine
-            if ordine_id in ordini_e_prodotti:
-                ordini_e_prodotti[ordine_id].append(prodotto)
-            else:
-                # Recupera l'ordine completo
-                ordine_completo = Ordini.query.get(ordine_id)
-                # Aggiungi una nuova chiave (ordine) con una lista contenente il prodotto
-                ordini_e_prodotti[ordine_id] = [prodotto, ordine_completo]
-
-    # Converte il dizionario in una lista di tuple per facilitarne l'iterazione nel template
-    ordini_e_prodotti_lista = [(ordine, prodotti) for ordine, prodotti in ordini_e_prodotti.items()]
-
-    # Rende il template 'oggetti_venduti.html' con le informazioni necessarie
-    return render_template('oggetti_venduti.html', utente=current_user, ordini_e_prodotti=ordini_e_prodotti_lista)
-"""
 
 @auth.route('/oggetti_venduti', methods=['GET', 'POST'])
 @login_required
@@ -611,3 +581,8 @@ def oggetti_venduti():
 
     # Rende il template 'oggetti_venduti.html' con le informazioni necessarie
     return render_template('oggetti_venduti.html', utente=current_user, ordini_e_prodotti=ordini_e_prodotti_lista)
+
+@auth.route('/spedisci')
+@login_required
+def spedisci():
+    pass

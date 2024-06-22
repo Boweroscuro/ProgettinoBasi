@@ -10,7 +10,7 @@ Oggetti Venduti
     {% for ordine, prodotti in ordini_e_prodotti %}
     <div class="card mb-3">
         <div class="card-header">
-            <h3>Ordine ID: {{ ordine }}</h3>
+            <h3>Ordine ID: {{ ordine.idordine }}</h3>
             <ul>
             {% for prodotto in prodotti %}
             <li class="list-group-item">
