@@ -82,13 +82,6 @@ class Ordini(db.Model):
     idcp = db.Column(db.Integer, db.ForeignKey('carrello_prodotto.idcp'), nullable=False)
     
 
-class Recensioni(db.Model):
-    __tablename__ = 'recensioni'
-
-    idrecensione = db.Column(db.Integer, primary_key = True)
-    voto = db.Column(db.Integer, nullable = False)
-    commento = db.Column(db.Text, nullable = False)
-
 class CarrelloProdotto(db.Model):
     __tablename__ = 'carrello_prodotto'
 
