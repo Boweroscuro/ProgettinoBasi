@@ -31,7 +31,7 @@ Storico Ordini
                         <tr>
                             <td class="col-prodotto">{{ prodotto.nome }}</td>
                             <td class="col-stato">{{ prodotto.qta }}</td>
-                            <td class="col-stato">${{ "%.2f"|format(prodotto.costo) }}</td>
+                            <td class="col-stato">€{{ "%.2f"|format(prodotto.costo) }}</td>
                             {% if prodotto.consegna %}
                             <td class="col-stato">Consegnato</td>
                             {% else %}
