@@ -331,11 +331,23 @@ def homeprodot(idcategoria):
     if max_cost:
         prodotti_query = prodotti_query.filter(Prodotti.costo <= max_cost)
 
+    default_sort_field = 'nome'
+    default_sort_order = 'asc'
+
     if sort_by:
-        if sort_by == 'nome':
-            prodotti_query = prodotti_query.order_by(Prodotti.nome.asc())
-        elif sort_by == 'costo':
-            prodotti_query = prodotti_query.order_by(Prodotti.costo.asc())
+        field, order = sort_by.split('_')
+        if field == 'nome' or field == 'costo':
+            if order == 'asc':
+                prodotti_query = prodotti_query.order_by(getattr(Prodotti, field).asc())
+            elif order == 'desc':
+                prodotti_query = prodotti_query.order_by(getattr(Prodotti, field).desc())
+            else:
+                prodotti_query = prodotti_query.order_by(getattr(Prodotti, default_sort_field).asc())
+        else:
+            prodotti_query = prodotti_query.order_by(getattr(Prodotti, default_sort_field).asc())
+    else:
+        prodotti_query = prodotti_query.order_by(getattr(Prodotti, default_sort_field).asc())
+
     
     prodotti = prodotti_query.all()
 
