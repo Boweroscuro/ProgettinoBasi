@@ -5,26 +5,16 @@ Oggetti Venduti
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center">Oggetti Venduti</h2>
+
+    <h1>Oggetti Venduti</h1>
+    <h2>Utente: {{ utente.username }}</h2>
     {% for ordine, prodotti in ordini_e_prodotti %}
-    <div class="card mb-3">
-        <div class="card-header">
-            <h4>Ordine #{{ ordine.idordine }}</h4>
-            <p>Data: {{ ordine.dataordine }}</p>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                {% for prodotto in prodotti %}
-                <li class="list-group-item">
-                    <h5>{{ prodotto.nome }}</h5>
-                    <p>Quantità: {{ prodotto.storici.filter_by(idor=ordine.idordine).first().qta }}</p>
-                    <p>Pagato: {{ prodotto.storici.filter_by(idor=ordine.idordine).first().pagato }}</p>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+        <h3>Ordine ID: {{ ordine.idordine }}</h3>
+        <ul>
+        {% for prodotto in prodotti %}
+            <li>{{ prodotto.nome }} - {{ prodotto.prezzo }} €</li>
+        {% endfor %}
+        </ul>
     {% endfor %}
-</div>
+
 {% endblock %}
