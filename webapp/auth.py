@@ -147,6 +147,7 @@ def hvenditori():
     
     return render_template('hvenditori.html', utente=current_user, prodotti = prodotti)
 
+
 @auth.route('/modifica_prodotto/<int:idprodotto>', methods=['GET', 'POST'])
 @login_required
 def modifica_prodotto(idprodotto):
@@ -154,17 +155,19 @@ def modifica_prodotto(idprodotto):
 
     if request.method == 'POST':
         prodotto.nome = request.form.get('nome')
+        prodotto.costo = request.form.get('costo')
+        prodotto.quantità = request.form.get('quantità')
         prodotto.descrizione = request.form.get('descrizione')
-        prodotto.prezzo = request.form.get('prezzo')
-        # Add other fields as necessary
+        prodotto.marca = request.form.get('marca')
+
+        if 'immagine' in request.files:
+            prodotto.immagine = request.files['immagine'].read()
 
         db.session.commit()
-        flash('Prodotto modificato con successo!', category='success')
-        return redirect(url_for('auth.prodotti_in_vendita'))
+        flash('Prodotto aggiornato con successo!', category='success')
+        return redirect(url_for('auth.hvenditori'))  # Update to the correct route for listing products
 
-    return render_template('modifica_prodotto.html', prodotto=prodotto)
-
-
+    return render_template('modifica_prodotto.html', prodotto=prodotto, utente=current_user)
 
 
 @auth.route('/eliminaprodotto/<int:idprodotto>', methods=['POST'])
