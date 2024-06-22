@@ -22,5 +22,6 @@
         <input type="text" class="form-control" id="citta" name="citta" placeholder="Città" required />
     </div>
     <button type="submit" class="btn btn-success">Aggiungi</button>
+    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-success">Indietro</a>
 </form>
 {% endblock %}
