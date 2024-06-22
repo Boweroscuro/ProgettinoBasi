@@ -13,13 +13,13 @@ CarrelloProva
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th>Sr</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                    <th>Update</th>
-                    <th>Delete</th>
+                    <th>N°</th>
+                    <th>Nome</th>
+                    <th>Prezzo</th>
+                    <th>Quantità</th>
+                    <th>Subtotale</th>
+                    <th>Aggiorna</th>
+                    <th>Rimuovi</th>
                 </tr>
             </thead> 
             <tbody>
@@ -28,24 +28,24 @@ CarrelloProva
                     <td>{{ loop.index }}</td>
                     <td>{{ item.prodotto.nome }}</td>
                     <form action="{{ url_for('auth.updatecart', idprodotto=item.idp) }}" method="post">
-                    <td>${{ "%.2f"|format(item.prodotto.costo) }}</td>
+                    <td>{{ "%.2f"|format(item.prodotto.costo) }}€</td>
                     <td><input type="number" name="quantità" min="1" max= "{{ item.prodotto.quantità }}" value="{{ item.quantità }}"></td>
-                    <td>${{ "%.2f"|format(item.quantità * item.prodotto.costo) }}</td>
-                    <td><button type="submit" class="btn btn-sm btn-info">Update</button></td>
+                    <td>{{ "%.2f"|format(item.quantità * item.prodotto.costo) }}€</td>
+                    <td><button type="submit" class="btn btn-sm btn-info">Aggiorna</button></td>
                     </form>
-                    <td><a href="{{ url_for('auth.deleteitem', id=item.idcp) }}" class="btn btn-sm btn-danger">Delete</a></td>
+                    <td><a href="{{ url_for('auth.deleteitem', id=item.idcp) }}" class="btn btn-sm btn-danger">Rimuovi</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <table class="table table-sm">
            <tr>
-               <td><a href="{{ url_for('auth.checkout') }}" class="btn btn-success">Order now</a></td>
+               <td><a href="{{ url_for('auth.checkout') }}" class="btn btn-success">Ordina</a></td>
                <td><a href="{{ url_for('views.home') }}" class="btn btn-success">Indietro</a></td>
                <td width="35%"></td>
-               <td><h5>Tassa: ${{ "%.2f"|format(tax) }}</h5></td>
-               <td><h5>Gran Totale: ${{ "%.2f"|format(grand_total) }}</h5></td>
-               <td><a href="{{ url_for('auth.clearcart') }}" class="btn btn-danger btn-sm float-right mr-4">Clear cart</a></td>
+               <td><h5>Tassa: {{ "%.2f"|format(tax) }}€</h5></td>
+               <td><h5>Gran Totale: {{ "%.2f"|format(grand_total) }}€</h5></td>
+               <td><a href="{{ url_for('auth.clearcart') }}" class="btn btn-danger btn-sm float-right mr-4">Cancella Carrello</a></td>
            </tr>
         </table>
     </div>

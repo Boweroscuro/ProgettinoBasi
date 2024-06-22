@@ -20,7 +20,9 @@ Profilo Utente
                         <li class="list-group-item"><strong>Email:</strong> {{ utente.email }}</li>
                     </ul>
                     <div class="mt-3 text-center">
+                        {% if not utente.privilegi %}
                         <a href="{{ url_for('auth.storico_ordini') }}" class="btn btn-success">Cronologia Ordini</a>
+                        {% endif %}
                         <a href="{{ url_for('auth.logout') }}" class="btn btn-danger ml-2">Logout</a>
                     </div>
                 </div>
