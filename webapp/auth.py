@@ -560,15 +560,26 @@ def storico_ordini():
     for storico in storici:
         ordine_id = storico.idor
         prodotto = Prodotti.query.get(storico.idpr)
+        ordine = Ordini.query.get(ordine_id)  # Assuming you have an Ordini model to get the order details
+
+        prodotto_info = {
+            'nome': prodotto.nome,
+            'costo': prodotto.costo,
+            'consegna': storico.consegna,
+            'qta': storico.qta,
+            'dataordine': ordine.dataordine  # Assuming ordine has a dataordine attribute
+        }
+
         if ordine_id in ordini_e_prodotti:
-            ordini_e_prodotti[ordine_id].append(prodotto)
+            ordini_e_prodotti[ordine_id]['prodotti'].append(prodotto_info)
         else:
-            ordini_e_prodotti[ordine_id] = [prodotto]
+            ordini_e_prodotti[ordine_id] = {
+                'dataordine': ordine.dataordine,
+                'prodotti': [prodotto_info]
+            }
 
-    # Converti il dizionario in una lista di tuple per facilitarne l'iterazione nel template
-    ordini_e_prodotti_lista = [(ordine_id, prodotti) for ordine_id, prodotti in ordini_e_prodotti.items()]
+    return render_template('storico.html', ordini=ordini_e_prodotti, utente=current_user)
 
-    return render_template('storico.html', ordini_e_prodotti=ordini_e_prodotti_lista, utente=current_user)
 
 
 

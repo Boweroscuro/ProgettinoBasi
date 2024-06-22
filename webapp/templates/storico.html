@@ -8,48 +8,45 @@ Storico Ordini
 <div class="container mt-4">
     <h2 class="text-center mb-4">Storico Ordini</h2>
     {% if ordini %}
-        {% set current_order_id = None %}
-        {% for ordine in ordini %}
+        {% for ordine_id, ordine in ordini.items() %}
         <div class="card mb-3">
-            {% if current_order_id != ordine.idor %}
-                <!-- Intestazione per nuovo ordine -->
-                {% if current_order_id is not none %}
-                    </tbody>
-                    </table>
-                {% endif %}
-                {% set current_order_id = ordine.idor %}
-                <div class="card-header">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th class="col-stato">ID Ordine</th>
-                                <th class="col-prodotto">Prodotto</th>
-                                <th class="col-stato">Data</th>
-                                <th class="col-stato">Quantità</th>
-                                <th class="col-stato">Pagato</th>
-                                <th class="col-stato">Stato</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                {% endif %}
-                            <tr>
-                                <td class="col-stato">{{ ordine.idor }}</td>
-                                <td class="col-prodotto">{{ ordine.prodotto.nome }}</td>
-                                <td class="col-stato">{{ ordine.ordine.dataordine }}</td>
-                                <td class="col-stato">{{ ordine.qta }}</td>
-                                <td class="col-stato">${{ "%.2f"|format(ordine.pagato) }}</td>
-                                <td class="col-stato">{{ ordine.consegna }}</td> 
-                            </tr>
-                {% if loop.last  %}
-                        </tbody>
-                    </table>
+            <div class="card-header">
+                <div class="card-header d-flex justify-content-between">
+                    <h3>Ordine: {{ ordine_id }}</h3>
+                    <h3>Data: {{ ordine.dataordine }}</h3>
                 </div>
-            {% endif %}
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th class="col-prodotto">Prodotto</th>
+                            <th class="col-stato">Quantità</th>
+                            <th class="col-stato">Pagato</th>
+                            <th class="col-stato">Stato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prodotto in ordine.prodotti %}
+                        <tr>
+                            <td class="col-prodotto">{{ prodotto.nome }}</td>
+                            <td class="col-stato">{{ prodotto.qta }}</td>
+                            <td class="col-stato">${{ "%.2f"|format(prodotto.costo) }}</td>
+                            {% if prodotto.consegna %}
+                            <td class="col-stato">Consegnato</td>
+                            {% else %}
+                            <td class="col-stato">In elaborazione</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         {% endfor %}
     {% else %}
         <p class="text-center">Non hai ordini precedenti.</p>
     {% endif %}
-    <td><a href="{{ url_for('auth.user_profile') }}" class="btn btn-success">Indietro</a></td>
+    <a href="{{ url_for('auth.user_profile') }}" class="btn btn-success">Indietro</a>
 </div>
 {% endblock %}
