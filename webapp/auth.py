@@ -535,7 +535,7 @@ def completamento_ordine(idordine):
     return redirect(url_for('auth.storico_ordini', utente = current_user))
 
 
-
+"""
 @auth.route('/storico', methods=['GET'])
 @login_required
 def storico_ordini():
@@ -547,6 +547,29 @@ def storico_ordini():
     )
 
     return render_template('storico.html', ordini=ordini, utente = current_user)
+"""
+    
+@auth.route('/storico', methods=['GET'])
+@login_required
+def storico_ordini():
+    # Trova tutti i record dello storico per l'utente corrente
+    storici = Storici.query.filter_by(idu=current_user.idutente).all()
+
+    # Dizionario per mappare ogni ordine ai suoi prodotti
+    ordini_e_prodotti = {}
+    for storico in storici:
+        ordine_id = storico.idor
+        prodotto = Prodotti.query.get(storico.idpr)
+        if ordine_id in ordini_e_prodotti:
+            ordini_e_prodotti[ordine_id].append(prodotto)
+        else:
+            ordini_e_prodotti[ordine_id] = [prodotto]
+
+    # Converti il dizionario in una lista di tuple per facilitarne l'iterazione nel template
+    ordini_e_prodotti_lista = [(ordine_id, prodotti) for ordine_id, prodotti in ordini_e_prodotti.items()]
+
+    return render_template('storico.html', ordini_e_prodotti=ordini_e_prodotti_lista, utente=current_user)
+
 
 
 @auth.route('/oggetti_venduti', methods=['GET', 'POST'])

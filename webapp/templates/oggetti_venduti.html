@@ -10,7 +10,10 @@ Oggetti Venduti
     {% for ordine, prodotti in ordini_e_prodotti %}
     <div class="card mb-3">
         <div class="card-header">
-            <h3>Ordine ID: {{ ordine.idordine }}</h3>
+            <div class="card-header d-flex justify-content-between">
+                <h3>Ordine: {{ ordine.idordine }}</h3>
+                <h3>Data: {{ ordine.dataordine }}</h3>
+            </div>
             <ul>
             {% for prodotto, consegna in prodotti %}
             <li class="list-group-item">
