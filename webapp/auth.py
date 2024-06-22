@@ -336,7 +336,6 @@ def homeprodot(idcategoria):
     default_sort_order = 'asc'
 
     if sort_by:
-<<<<<<< HEAD
         field, order = sort_by.split('_')
         if field == 'nome' or field == 'costo':
             if order == 'asc':
@@ -350,12 +349,6 @@ def homeprodot(idcategoria):
     else:
         prodotti_query = prodotti_query.order_by(getattr(Prodotti, default_sort_field).asc())
 
-=======
-        if sort_by == 'nome':
-            prodotti_query = prodotti_query.order_by(asc(Prodotti.nome))
-        elif sort_by == 'costo':
-            prodotti_query = prodotti_query.order_by(asc(Prodotti.costo))
->>>>>>> 8e16fc14b32d4ea408de7d92fd688c3e03c45436
     
     prodotti = prodotti_query.all()
 
