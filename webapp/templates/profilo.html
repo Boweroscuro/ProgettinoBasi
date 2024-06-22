@@ -32,12 +32,12 @@ Profilo Utente
                     <h2 class="text-center">Dati Indirizzo</h2>
                 </div>
                 <div class="card-body">
-                    {% if indirizzo %}
+                    {% if indirizzo_predefinito %}
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Via:</strong> {{ indirizzo.via }}</li>
-                            <li class="list-group-item"><strong>Numero:</strong> {{ indirizzo.numero }}</li>
-                            <li class="list-group-item"><strong>CAP:</strong> {{ indirizzo.cap }}</li>
-                            <li class="list-group-item"><strong>Città:</strong> {{ indirizzo.città }}</li>
+                            <li class="list-group-item"><strong>Via:</strong> {{ indirizzo_predefinito.via }}</li>
+                            <li class="list-group-item"><strong>Numero:</strong> {{ indirizzo_predefinito.numero }}</li>
+                            <li class="list-group-item"><strong>CAP:</strong> {{ indirizzo_predefinito.cap }}</li>
+                            <li class="list-group-item"><strong>Città:</strong> {{ indirizzo_predefinito.città }}</li>
                         </ul>
                     {% else %}
                         <p>Nessun indirizzo predefinito associato.</p>
@@ -46,6 +46,30 @@ Profilo Utente
                         <a href="{{ url_for('auth.aggiungi_indirizzo') }}" class="btn btn-success">Aggiungi indirizzo
                         <a href="{{ url_for('views.home') }}" class="btn btn-secondary ml-2">Torna alla Home</a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Indirizzi Secondari</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('auth.cambia_indirizzo_default') }}">
+                        <div class="form-group">
+                            <label for="indirizzo_id">Seleziona un indirizzo per impostarlo come predefinito:</label>
+                            <select class="form-control" id="indirizzo_id" name="indirizzo_id">
+                                {% for indirizzo in indirizzi %}
+                                    <option value="{{ indirizzo.idindirizzo }}" {% if indirizzo.isdefault %} selected {% endif %}>
+                                        {{ indirizzo.via }} {{ indirizzo.numero }}, {{ indirizzo.cap }} {{ indirizzo.città }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Cambia Indirizzo Predefinito</button>
+                    </form>
                 </div>
             </div>
         </div>

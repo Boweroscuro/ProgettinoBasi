@@ -89,6 +89,29 @@ def sign_up2():
 
     return render_template('sign_up2.html', utente = current_user)
 
+@auth.route('/cambia_indirizzo_default', methods=['POST'])
+@login_required
+def cambia_indirizzo_default():
+    indirizzo_id = request.form.get('indirizzo_id')
+
+    # Trova l'indirizzo selezionato
+    indirizzo_selezionato = Indirizzi.query.get(indirizzo_id)
+    
+    if indirizzo_selezionato and indirizzo_selezionato in current_user.indirizzi_ass:
+        # Imposta tutti gli indirizzi dell'utente come non predefiniti
+        for indirizzo in current_user.indirizzi_ass:
+            indirizzo.isdefault = False
+        
+        # Imposta l'indirizzo selezionato come predefinito
+        indirizzo_selezionato.isdefault = True
+        db.session.commit()
+        flash('Indirizzo predefinito cambiato con successo!', 'success')
+    else:
+        flash('Indirizzo non valido.', 'error')
+
+    return redirect(url_for('auth.user_profile'))
+
+
 @auth.route('/aggiungi_indirizzo', methods=['GET', 'POST'])
 @login_required 
 def aggiungi_indirizzo():
@@ -99,7 +122,7 @@ def aggiungi_indirizzo():
         citta = request.form.get('citta')
 
         indirizzo = Indirizzi(via=via, numero=numero, cap=cap, città = citta, isdefault = False)
-        indirizzo.utente_ass.append(current_user)
+        indirizzo.utenti_ass.append(current_user)
         db.session.add(indirizzo)
         db.session.commit()
         
@@ -110,12 +133,11 @@ def aggiungi_indirizzo():
 
 
 @auth.route('/profilo')
-@login_required  
+@login_required
 def user_profile():
-    
-    indirizzo =  next((indirizzo for indirizzo in current_user.indirizzi_ass if indirizzo.isdefault), None)
+    indirizzo_predefinito = next((indirizzo for indirizzo in current_user.indirizzi_ass if indirizzo.isdefault), None)
+    return render_template('profilo.html', utente=current_user, indirizzo_predefinito=indirizzo_predefinito, indirizzi=current_user.indirizzi_ass)
 
-    return render_template('profilo.html', utente = current_user, indirizzo = indirizzo)
 
 @auth.route('/hvenditori', methods=['GET', 'POST'])
 @login_required
@@ -266,27 +288,6 @@ def homeprodot(idcategoria):
     
     search = request.args.get('search')
     selected_categoria = request.args.get('categoria')
-    """
-    prodotti_query = Prodotti.query.filter(Prodotti.idc.in_(categorie_ids))
-
-    if search:
-        # Esegui una ricerca generica per i prodotti che corrispondono al termine di ricerca
-        prodotti_query = prodotti_query.filter(Prodotti.nome.ilike(f'%{search}%'))
-
-    if selected_categoria:
-        # Ottieni tutti gli ID delle sottocategorie nidificate sotto la categoria selezionata
-        sottocategorie_ids = get_all_subcategories(selected_categoria)
-        sottocategorie_ids.append(selected_categoria)  # Aggiungi anche la categoria selezionata stessa
-        # Filtra i prodotti per l'ID della categoria selezionata e tutte le sue sottocategorie
-        prodotti_query = prodotti_query.filter(Prodotti.idc.in_(sottocategorie_ids))
-
-    prodotti = prodotti_query.all()
-    
-    # Nessuna ricerca specificata, mostra tutti i prodotti
-    categorie = Categorie.query.filter(Categorie.idgenitore.is_(None)).all()
-    
-    return render_template("homeprodot.html", utente = current_user, prodotti=prodotti, categorie = categorie, idcategoria = idcategoria, categorie_figlie=categorie_figlie, request = request)
-    """
     sort_by = request.args.get('sort_by')
     min_cost = request.args.get('min_cost')
     max_cost = request.args.get('max_cost')
@@ -534,20 +535,6 @@ def completamento_ordine(idordine):
     flash("Ordine completato con successo!", "success")
     return redirect(url_for('auth.storico_ordini', utente = current_user))
 
-
-"""
-@auth.route('/storico', methods=['GET'])
-@login_required
-def storico_ordini():
-
-    ordini = (
-        Storici.query
-        .filter_by(idu=current_user.idutente)
-        .all()
-    )
-
-    return render_template('storico.html', ordini=ordini, utente = current_user)
-"""
     
 @auth.route('/storico', methods=['GET'])
 @login_required
