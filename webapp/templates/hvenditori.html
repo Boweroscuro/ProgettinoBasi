@@ -19,6 +19,7 @@ Prodotti in vendita
             <p></p>
             <form id="elimina-form-{{ prodotto.idprodotto }}" action="{{ url_for('auth.eliminaprodotto', idprodotto=prodotto.idprodotto) }}" method="post">
                 <button type="button" class="btn btn-danger elimina-btn" data-prodotto="{{ prodotto.idprodotto }}">Elimina</button>
+                <a href="{{ url_for('auth.modifica_prodotto', idprodotto=prodotto.idprodotto) }}" class="btn btn-primary">Modifica</a>
             </form>
             </div>
         </div>
