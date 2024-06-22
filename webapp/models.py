@@ -68,7 +68,6 @@ class Prodotti(db.Model):
 
     idu = db.Column(db.Integer, db.ForeignKey('utenti.idutente'))
     idc = db.Column(db.Integer, db.ForeignKey('categorie.idcategoria'))
-    #storici = db.relationship('Storici', backref='prodotto')
 
 
 class Ordini(db.Model):

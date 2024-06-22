@@ -14,6 +14,16 @@ Storico Ordini
                 <div class="card-header d-flex justify-content-between">
                     <h3>Ordine: {{ ordine_id }} </h3>
                     <h3>Data: {{ ordine.dataordine }} </h3>
+                    {% if 'consegnato' in ordine %}
+                        {% if ordine.consegnato %}
+                            <span class="badge badge-success">Completato</span>
+                        {% else %}
+                            <span class="badge badge-warning">In corso</span>
+                        {% endif %}
+                    {% else %}
+                        <span class="badge badge-danger">Errore: stato ordine non definito</span>
+                    {% endif %}
+
                 </div>
             </div>
             <div class="card-body">

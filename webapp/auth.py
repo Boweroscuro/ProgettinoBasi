@@ -648,7 +648,7 @@ def consegna_prodotto(ordine_id, prodotto_id):
     else:
         flash('Prodotto non trovato.', 'danger')
 
-    verifica_completamento_ordine(storico.idordine)
+    verifica_completamento_ordine(storico.idor)
     return redirect(url_for('auth.oggetti_venduti'))
 
 @auth.route('/annulla_prodotto/<int:ordine_id>/<int:prodotto_id>', methods=['POST'])
@@ -663,10 +663,9 @@ def annulla_prodotto(ordine_id, prodotto_id):
         flash('Prodotto annullato con successo!', 'success')
     else:
         flash('Prodotto non trovato.', 'danger')
+    
+    verifica_completamento_ordine(storico.idor)
     return redirect(url_for('auth.oggetti_venduti'))
-
-
-
 
 
 def verifica_completamento_ordine(id_ordine):
@@ -676,10 +675,10 @@ def verifica_completamento_ordine(id_ordine):
         abort(404, f"Ordine con id {id_ordine} non trovato.")
 
     # Conta il numero di elementi nello storico associati a questo ordine
-    num_elementi = Storici.query.filter_by(idordine=id_ordine).count()
+    num_elementi = Storici.query.filter_by(idor=id_ordine).count()
 
     # Conta il numero di elementi completati
-    num_elementi_completati = Storici.query.filter_by(idordine=id_ordine, stato_consegna=True).count()
+    num_elementi_completati = Storici.query.filter_by(idor=id_ordine, consegna=True).count()
 
     # Se tutti gli elementi sono completati, aggiorna il campo completato dell'ordine
     if num_elementi > 0 and num_elementi == num_elementi_completati:
