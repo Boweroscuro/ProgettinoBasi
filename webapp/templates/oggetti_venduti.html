@@ -5,16 +5,28 @@ Oggetti Venduti
 {% endblock %}
 
 {% block content %}
-
-    <h1>Oggetti Venduti</h1>
-    <h2>Utente: {{ utente.username }}</h2>
+<div class="container mt-4">
+    <h2 class="text-center">Oggetti Venduti</h2>
     {% for ordine, prodotti in ordini_e_prodotti %}
-        <h3>Ordine ID: {{ ordine.idordine }}</h3>
-        <ul>
-        {% for prodotto in prodotti %}
-            <li>{{ prodotto.nome }} - {{ prodotto.prezzo }} €</li>
-        {% endfor %}
-        </ul>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3>Ordine ID: {{ ordine }}</h3>
+            <ul>
+            {% for prodotto in prodotti %}
+            <li class="list-group-item">
+                <p>{{ prodotto.nome }} - {{ prodotto.costo }} €</p>
+                <a href="{{ url_for('auth.user_profile') }}" class="btn btn-success">Consegna</a>
+                <a href="{{ url_for('auth.user_profile') }}" class="btn btn-danger">Annulla</a>
+            </li>
+            
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
     {% endfor %}
+
+
+
+    
 
 {% endblock %}
