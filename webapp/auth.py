@@ -1,5 +1,6 @@
 from io import BytesIO
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, send_file, url_for, request
+from sqlalchemy import asc
 from .models import *
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -60,7 +61,7 @@ def sign_up():
         elif len(password1) < 7:
             flash('Password must be at least 7 characters.', category='error')
         else:
-            utente = Utenti(nome = nome, cognome = cognome, username = username, email = email, password_hash = generate_password_hash(password1), privilegi = privilegi, indirizzo_ass = [], isadmin = False)
+            utente = Utenti(nome = nome, cognome = cognome, username = username, email = email, password_hash = generate_password_hash(password1), privilegi = privilegi, indirizzi_ass = [], isadmin = False)
             db.session.add(utente)
             db.session.commit()
             return redirect(url_for('auth.sign_up2' , user_id = utente.idutente))
@@ -79,7 +80,7 @@ def sign_up2():
         n_utente = Utenti.query.filter_by(idutente = user_id).first()
 
         indirizzo = Indirizzi(via=via, numero=numero, cap=cap, città = citta, isdefault = True)
-        indirizzo.utente_ass.append(n_utente)
+        indirizzo.utenti_ass.append(n_utente)
         db.session.add(indirizzo)
         db.session.commit()
         
@@ -160,7 +161,7 @@ def modifica_prodotto(idprodotto):
         prodotto.descrizione = request.form.get('descrizione')
         prodotto.marca = request.form.get('marca')
 
-        if 'immagine' in request.files:
+        if 'immagine' in request.files and request.files['immagine'].filename != '':
             prodotto.immagine = request.files['immagine'].read()
 
         db.session.commit()
@@ -333,9 +334,9 @@ def homeprodot(idcategoria):
 
     if sort_by:
         if sort_by == 'nome':
-            prodotti_query = prodotti_query.order_by(Prodotti.nome.asc())
+            prodotti_query = prodotti_query.order_by(asc(Prodotti.nome))
         elif sort_by == 'costo':
-            prodotti_query = prodotti_query.order_by(Prodotti.costo.asc())
+            prodotti_query = prodotti_query.order_by(asc(Prodotti.costo))
     
     prodotti = prodotti_query.all()
 
@@ -478,9 +479,7 @@ def checkout():
         completato = False 
     )
 
-
     try:
-        
         db.session.add(nuovo_ordine)
         db.session.commit()
         flash('Ordine creato con successo!', 'success')
