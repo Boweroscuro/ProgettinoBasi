@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
     <h3>Aggiungi una nuova categoria</h3>
-    <form method="POST" enctype="multipart/form-data">
+    <form id="category-form" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nome">Nome Categoria</label>
             <input type="text" class="form-control" id="nome" name="nome" placeholder="Inserisci il nome della categoria" required>
@@ -30,17 +30,37 @@
                 {% endfor %}
             </select>
         </div>
+        <!-- Hidden input to handle idgenitore clearing -->
+        <input type="hidden" id="hidden_idgenitore" name="hidden_idgenitore" value="">
         <button type="submit" class="btn btn-primary">Aggiungi Categoria</button>
     </form>
 </div>
 
 <script>
-    // Mostra o nascondi il campo "Categoria Genitore" in base alla selezione dell'utente
     document.getElementById('tipo').addEventListener('change', function() {
+        var selectGenitore = document.getElementById('select-genitore');
+        var idgenitore = document.getElementById('idgenitore');
+        var hiddenIdgenitore = document.getElementById('hidden_idgenitore');
         if (this.value === 'sottocategoria') {
-            document.getElementById('select-genitore').style.display = 'block';
+            selectGenitore.style.display = 'block';
+            idgenitore.required = true;
         } else {
-            document.getElementById('select-genitore').style.display = 'none';
+            selectGenitore.style.display = 'none';
+            idgenitore.required = false;
+            idgenitore.value = ''; // Clear the value of idgenitore
+            hiddenIdgenitore.value = 'NULL'; // Set hidden input to indicate NULL
+        }
+    });
+
+    document.getElementById('category-form').addEventListener('submit', function(event) {
+        var tipo = document.getElementById('tipo').value;
+        var idgenitore = document.getElementById('idgenitore');
+        var hiddenIdgenitore = document.getElementById('hidden_idgenitore');
+        if (tipo === 'principale') {
+            idgenitore.value = ''; // Ensure the idgenitore value is cleared
+            hiddenIdgenitore.value = 'NULL'; // Set hidden input to indicate NULL
+        } else {
+            hiddenIdgenitore.value = ''; // Clear hidden input for valid idgenitore
         }
     });
 </script>

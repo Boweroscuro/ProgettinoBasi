@@ -12,7 +12,7 @@ Homepage
     <div class="row">
         {% for sottocategoria in categorie_figlie %}
         <div class="col-md-4 mb-4">
-            <div class="card card-border h-100 text-center hover-pointer" onclick=window.location.href="{{url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}"> 
+            <div class="card card-border h-100 text-center hover-pointer" onclick=window.location.href="{{ url_for('auth.homeprodot', idcategoria=sottocategoria.idcategoria) }}"> 
                 <img src="{{ url_for('auth.get_immagine_cat', idcategoria=sottocategoria.idcategoria) }}" class="card-img-top" alt="{{ sottocategoria.nome }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ sottocategoria.nome }}</h5>
@@ -26,7 +26,7 @@ Homepage
     </div>
     {% endif %}
     
-    <form action="{{ url_for('auth.homeprodot', idcategoria=idcategoria) }}" method="GET" class="mb-4">
+    <form id="filter-form" action="{{ url_for('auth.homeprodot', idcategoria=idcategoria) }}" method="GET" class="mb-4">
         <div class="form-row align-items-center">
             <div class="col-auto">
                 <input type="text" class="form-control mb-2" name="search" placeholder="Cerca per nome prodotto" value="{{ request.args.get('search', '') }}">
@@ -50,7 +50,7 @@ Homepage
                 <button type="submit" class="btn btn-outline-primary mb-2">Filtra</button>
             </div>
             <div class="col-auto">
-                <button type="reset" class="btn btn-outline-danger mb-2" onclick="this.form.reset();this.form.submit();">Reset</button>
+                <button type="button" class="btn btn-outline-danger mb-2" onclick="resetFilters()">Reset</button>
             </div>
         </div>
     </form>
@@ -76,4 +76,14 @@ Homepage
     </div>
     <a href="{{ request.referrer or url_for('views.home') }}" class="btn btn-success">Indietro</a>
 </div>
+
+<script>
+function resetFilters() {
+    const url = new URL(window.location.href);
+    url.searchParams.forEach((value, key) => {
+        url.searchParams.delete(key);
+    });
+    window.location.href = url.toString();
+}
+</script>
 {% endblock %}
