@@ -1,4 +1,5 @@
 # Basi di Dati
+This was our first project with database management and also client web pages. It is very simple and intuitive.
 
 ## Homepage
 <img width="936" height="669" alt="image" src="https://github.com/user-attachments/assets/991a7fff-034b-42e7-9584-17acec55cb59" />
